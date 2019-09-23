@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wolf childdebug="no" command_timeout="600">
+    <log disposition="truncate">DFIR-ORC_{SystemType}_{FullComputerName}_{TimeStamp}.log</log>
+
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Main.7z" keyword="Main" concurrency="2" repeat="Once" compression="fast">
+        <restrictions JobMemoryLimit="3G" ProcessMemoryLimit="2G" ElapsedTimeLimit="360"/>
+
+        <command keyword="SystemInfo">
+            <execute name="systeminfo.exe" run="%windir%\System32\systeminfo.exe"/>
+            <argument>/FO csv</argument>
+            <output name="Systeminfo.csv" source="StdOutErr"/>
+        </command>
+
+        <command keyword="Processes" winver="6.1+">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden</argument>
+            <argument>Get-WMIObject win32_process | Export-Csv -NoTypeInformation -Encoding UTF8</argument>
+            <output name="processes.csv" source="File" argument="-Path {FileName}"/>
+            <output name="processes.log" source="StdOutErr"/>
+        </command>
+
+        <command keyword="GetEvents">
+            <execute name="DFIR-ORC.exe" run="self:#GetThis"/>
+            <argument>/config=res:#GetEvents_config.xml</argument>
+            <output name="Event.7z" source="File" argument="/out={FileName}"/>
+            <output name="Event.log" source="StdOutErr"/>
+        </command>
+
+        <command keyword="Autoruns">
+            <execute name="autorunsc.exe" run="7z:#Tools|autorunsc.exe"/>
+            <argument>-a * -c -h -m -s -t -accepteula</argument>
+            <output name="autoruns.csv" source="StdOut"/>
+            <output name="autoruns.log" source="StdErr"/>
+        </command>
+
+        <command keyword="NTFSInfo" queue="flush">
+            <execute name="DFIR-ORC.exe" run="self:#NTFSInfo"/>
+            <argument>/config=res:#NTFSInfo_config.xml</argument>
+            <output name="NTFSInfo_SecDesc.7z" source="File" argument="/SecDescr={FileName}"/>
+            <output name="NTFSInfo_i30Info.7z" source="File" argument="/i30info={FileName}"/>
+            <output name="NTFSInfo.7z" source="File" argument="/out={FileName}"/>
+            <output name="NTFSInfo.log" source="StdOutErr"/>
+        </command>
+
+        <command keyword="NTFSInfoHashPE" queue="flush" optional="yes">
+            <execute name="DFIR-ORC.exe" run="self:#NTFSInfo"/>
+            <argument>/config=res:#NTFSInfoHashPE_config.xml</argument>
+            <output name="NTFSInfoHashPE_SecDesc.7z" source="File" argument="/SecDescr={FileName}"/>
+            <output name="NTFSInfoHashPE.7z" source="File" argument="/out={FileName}"/>
+            <output name="NTFSInfoHashPE.log" source="StdOutErr"/>
+        </command>
+
+        <command keyword="FatInfo">
+            <execute name="DFIR-Orc.exe" run="self:#FatInfo"/>
+            <argument>/config=res:#FatInfo_config.xml</argument>
+            <output name="FatInfo.7z" source="File" argument="/out={FileName}"/>
+            <output name="FatInfo.log" source="StdOutErr"/>
+        </command>
+
+        <command keyword="FatInfoHashPE"  optional="yes">
+            <execute name="DFIR-Orc.exe" run="self:#FatInfo"/>
+            <argument>/config=res:#FatInfoHashPE_config.xml</argument>
+            <output name="FatInfoHashPE.7z" source="File" argument="/out={FileName}"/>
+            <output name="FatInfoHashPE.log" source="StdOutErr"/>
+        </command>
+
+        <command keyword="USNInfo" queue="flush">
+            <execute name="DFIR-Orc.exe" run="self:#USNInfo"/>
+            <argument>*</argument>
+            <output name="USNInfo.7z" source="File" argument="/out={FileName}"/>
+            <output name="USNInfo.log" source="StdOutErr"/>
+        </command>
+
+        <command keyword="GetArtefacts">
+            <execute name="DFIR-Orc.exe" run="self:#GetThis"/>
+            <argument>/config=res:#GetArtefacts_config.xml</argument>
+            <output name="Artefacts.7z" source="File" argument="/out={FileName}"/>
+            <output name="Artefacts.log" source="StdOutErr"/>
+		</command>
+    </archive>
+
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Hives.7z" keyword="Hives" concurrency="2" repeat="Once" compression="fast">
+        <restrictions JobMemoryLimit="3G" ProcessMemoryLimit="1G" ElapsedTimeLimit="360"/>
+
+        <command keyword="GetSystemHives">
+            <execute name="DFIR-Orc.exe" run="self:#GetThis"/>
+            <argument>/config=res:#GetSystemHives_config.xml</argument>
+            <output name="SystemHives.7z" source="File" argument="/out={FileName}"/>
+            <output name="SystemHives.log" source="StdOutErr"/>
+        </command>
+
+        <command keyword="GetUserHives">
+            <execute name="DFIR-Orc.exe" run="self:#GetThis"/>
+            <argument>/config=res:#GetUserHives_config.xml</argument>
+            <output name="UserHives.7z" source="File" argument="/out={FileName}"/>
+            <output name="UserHives.log" source="StdOutErr"/>
+        </command>
+
+        <command keyword="GetSamHive">
+            <execute name="DFIR-Orc.exe" run="self:#GetThis"/>
+            <argument>/config=res:#GetSamHive_config.xml</argument>
+            <output name="SAM.7z" source="File" argument="/out={FileName}"/>
+            <output name="SAM.log" source="StdOutErr"/>
+        </command>
+    </archive>
+
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Yara.7z" keyword="Yara" concurrency="2" repeat="Once" compression="fast" archive_timeout="240" optional="yes">
+        <restrictions JobMemoryLimit="3G" ProcessMemoryLimit="3G" ElapsedTimeLimit="240"/>
+
+        <command keyword="GetYara">
+            <execute name="DFIR-Orc.exe" run="self:#GetThis"/>
+            <argument>/config=res:#GetYaraSamples_config.xml</argument>
+            <output name="Yara.7z" source="File" argument="/out={FileName}"/>
+            <output name="Yara.log" source="StdOutErr"/>
+        </command>
+    </archive>
+</wolf>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<getthis reportall="" flushregistry="yes">
+    <location>%SystemRoot%</location>
+    <samples MaxPerSampleBytes="500MB" MaxTotalBytes="2048MB">
+        <sample>
+            <ntfs_find name="SECURITY" header="regf"/>
+        </sample>
+        <sample>
+            <ntfs_find name="SOFTWARE" header="regf"/>
+        </sample>
+        <sample>
+            <ntfs_find name="SYSTEM" header="regf"/>
+        </sample>
+        <sample>
+            <ntfs_find name="COMPONENTS" header="regf"/>
+        </sample>
+        <sample>
+            <ntfs_find name="DEFAULT" header="regf"/>
+        </sample>
+    </samples>
+</getthis>

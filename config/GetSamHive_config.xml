@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<getthis reportall="" flushregistry="yes">
+    <location shadows="yes">%SystemDrive%</location>
+    <samples MaxPerSampleBytes="300MB" MaxTotalBytes="512MB">
+        <sample>
+            <ntfs_find name="SAM" header="regf"/>
+        </sample>
+    </samples>
+</getthis>

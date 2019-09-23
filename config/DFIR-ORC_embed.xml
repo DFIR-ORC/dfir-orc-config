@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<toolembed>
+    <input>.\tools\DFIR-Orc_x86.exe</input>
+    <output>.\output\%ORC_OUTPUT%</output>
+
+    <run64 args="WolfLauncher">7z:#Tools|DFIR-Orc_x64.exe</run64>
+    <run32 args="WolfLauncher">self:#</run32>
+
+    <file name="WOLFLAUNCHER_CONFIG" path=".\%ORC_CONFIG_FOLDER%\DFIR-ORC_config.xml"/>
+
+    <file name="GetSystemHives_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetSystemHives_config.xml"/>
+    <file name="GetUserHives_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetUserHives_config.xml"/>
+    <file name="GetSamHive_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetSamHive_config.xml"/>
+    <file name="GetEvents_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetEvents_config.xml"/>
+    <file name="NTFSInfo_config.xml" path=".\%ORC_CONFIG_FOLDER%\NTFSInfo_config.xml"/>
+    <file name="NTFSInfoHashPE_config.xml" path=".\%ORC_CONFIG_FOLDER%\NTFSInfoHashPE_config.xml"/>
+    <file name="FatInfo_config.xml" path=".\%ORC_CONFIG_FOLDER%\FatInfo_config.xml"/>
+    <file name="FatInfoHashPE_config.xml" path=".\%ORC_CONFIG_FOLDER%\FatInfoHashPE_config.xml"/>
+    <file name="GetArtefacts_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetArtefacts_config.xml"/>
+    <file name="GetYaraSamples_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetYaraSamples_config.xml"/>
+    <file name="ruleset.yara" path=".\%ORC_CONFIG_FOLDER%\ruleset.yara"/>
+
+    <archive name="Tools" format="7z" compression="Ultra">
+        <file name="DFIR-Orc_x64.exe" path=".\tools\DFIR-Orc_x64.exe"/>
+        <file name="autorunsc.exe" path=".\tools\autorunsc.exe"/>
+    </archive>
+</toolembed>

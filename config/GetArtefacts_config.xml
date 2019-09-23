@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<getthis reportall="">
+    <output compression="fast"/>
+    <location shadows="yes">*</location>
+    <samples MaxTotalBytes="1GB" MaxSampleCount="200000" MaxPerSampleBytes="650MB">
+
+        <sample name="Prefetch" MaxPerSampleBytes="20MB">
+            <ntfs_find path_match="\Windows\Prefetch\*.pf"/>
+            <ntfs_find path_match="\Windows\Prefetch\layout.ini"/>
+        </sample>
+
+        <sample name="AmCache" MaxPerSampleBytes="120MB">
+            <ntfs_find path_match="\Windows\AppCompat\Programs\*"/>
+        </sample>
+
+        <sample name="RDP_BMC" MaxPerSampleBytes="200MB" MaxTotalBytes="600MB">
+            <ntfs_find path_match="\Documents and Settings\*\Local Settings\Application Data\Microsoft\Terminal Server Client\Cache\*.bmc"/>
+            <ntfs_find path_match="\Documents and Settings\*\Local Settings\Application Data\Microsoft\Terminal Server Client\Cache\*.bin"/>
+            <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Terminal Server Client\Cache\*.bmc"/>
+            <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Terminal Server Client\Cache\*.bin"/>
+        </sample>
+
+        <sample name="BITS_QMGR" MaxTotalBytes="100MB">
+            <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Microsoft\Network\Downloader\qmgr*.dat"/>
+            <ntfs_find path_match="\ProgramData\Microsoft\Network\Downloader\qmgr*.dat"/>
+        </sample>
+
+    </samples>
+</getthis>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<getthis reportall="">
+    <output compression="fast"/>
+    <location>%SystemDrive%</location>
+    <yara block="20M" overlap="2M" timeout="20" source="res:#ruleset.yara"/>
+
+    <samples MaxSampleCount="2000" MaxTotalBytes="500MB">
+        <sample name="size_lower_8M" MaxPerSampleBytes="8MB">
+            <ntfs_find size_le="8M" yara_rule="*"/>
+        </sample>
+    </samples>
+</getthis>
