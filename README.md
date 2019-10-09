@@ -11,7 +11,7 @@ The "tools" directory must therefore contain the following files:
 * DFIR-Orc_x86.exe
 * autorunsc.exe
 
-Finally, to generate a configured DFIR-Orc executable, you have to run the "Configure.cmd" script (on a Windows system).  
+Finally, to generate a configured DFIR-Orc executable, you have to run the ".\Configure.cmd" script (on a Windows system, **from an elevated command prompt**).
 The generated binary is created in the "output" directory.
 
 
