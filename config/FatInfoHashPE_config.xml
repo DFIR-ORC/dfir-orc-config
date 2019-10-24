@@ -4,7 +4,7 @@
     <columns>
         <default>ComputerName,VolumeID,Default,RecordInUse,FirstBytes</default>
         <default>Details</default>
-        <omit SizeGT="100M">MD5,SHA-1,PeSHA1,PeSHA256,Authenticode</omit>
-        <add HasPE="">MD5,SHA-1,PeSHA1,PeSHA256,Authenticode</add>  
+        <omit SizeGT="100M">MD5,SHA1,PeSHA1,PeSHA256,Authenticode</omit>
+        <add HasPE="">MD5,SHA1,PeSHA1,PeSHA256,Authenticode</add>  
     </columns>
 </fatinfo>
