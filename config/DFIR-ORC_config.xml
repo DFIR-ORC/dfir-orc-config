@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wolf childdebug="no" command_timeout="600">
     <log disposition="truncate">DFIR-ORC_{SystemType}_{FullComputerName}_{TimeStamp}.log</log>
+    <outline disposition="truncate">DFIR-ORC_{SystemType}_{FullComputerName}.json</outline>
 
     <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Main.7z" keyword="Main" concurrency="2" repeat="Once" compression="fast">
         <restrictions JobMemoryLimit="3G" ProcessMemoryLimit="2G" ElapsedTimeLimit="360"/>
