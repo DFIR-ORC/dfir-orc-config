@@ -47,6 +47,7 @@
             <execute name="DFIR-ORC.exe" run="self:#NTFSInfo"/>
             <argument>/config=res:#NTFSInfoHashPE_config.xml</argument>
             <output name="NTFSInfoHashPE_SecDesc.7z" source="File" argument="/SecDescr={FileName}"/>
+            <output name="NTFSInfoHashPE_i30Info.7z" source="File" argument="/i30info={FileName}"/>
             <output name="NTFSInfoHashPE.7z" source="File" argument="/out={FileName}"/>
             <output name="NTFSInfoHashPE.log" source="StdOutErr"/>
         </command>
