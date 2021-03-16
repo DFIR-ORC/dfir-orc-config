@@ -25,6 +25,14 @@ Using DFIR ORC with the configurations provided here can entail the presence of 
 
 These configurations are provided as examples, and must be adapted to each concrete use case. This can be done by modifying the configurations themselves (see tutorial : https://dfir-orc.github.io/tuto.html), or by activation and deactivation of parts of the archive computation, or even computation of whole archives (see option /key in https://dfir-orc.github.io/cli-options.html).
 
+
+## License 
+
+
+The contents of this repository is available under [open licence 2.0](open-licence.md).
+
+The name DFIR ORC and the associate logo belongs to ANSSI, no use is permitted without its express approval.
+
 ## A propos des configurations et des données personnelles
 
 En utilisant DFIR ORC avec les configurations fournies ici, vous êtes susceptibles de collecter des données à caractère personnel (notamment des adresses IP, adresses de messagerie électronique, etc...). Ces données devront par conséquent être traitées conformément à la réglementation en vigueur sur la protection des données à caractère personnel, et notamment le règlement général sur la protection des données (RGPD) (réglement UE 2016/679) et, en France, la loi n° 78-17 du 6 janvier 1978 relative à l'informatique, aux fichiers et aux libertés.
@@ -37,7 +45,4 @@ Le contenu de ce dépôt est disponible sous la licence "LICENSE OUVERTE 2.0", d
 
 Le nom DFIR ORC et le logo associé appartiennent à l'ANSSI, aucun usage n'est permis sans autorisation expresse.
 
-The contents of this repository is available under [open licence 2.0](open-licence.md).
-
-The name DFIR ORC and the associate logo belongs to ANSSI, no use is permitted without its express approval.
 
