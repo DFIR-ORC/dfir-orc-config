@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<getthis reportall="">
+ <output compression="fast" /> 
+  <location>%SystemDrive%\</location>
+  <samples MaxPerSampleBytes="50MB" MaxTotalBytes="550MB" MaxSampleCount="200000">
+    <sample name="CatRoot">
+      <ntfs_find name_match="*.cat" header_hex="30" />
+    </sample>
+  </samples>
+</getthis>

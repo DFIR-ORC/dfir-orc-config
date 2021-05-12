@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<getthis nolimits="">
+ <output compression="fast" /> 
+  <location>%SystemDrive%</location>
+  <samples>
+    <sample name="MFT">
+      <ntfs_find path="\$MFT" />
+    </sample>
+  </samples>
+</getthis>

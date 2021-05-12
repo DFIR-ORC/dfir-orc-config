@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<getthis reportall="" nolimits="">
+  <location>%OfflineLocation%</location>
+  <samples>
+    <sample>
+        <ntfs_find name="SAM" header="regf" />
+    </sample>
+  </samples>
+</getthis>

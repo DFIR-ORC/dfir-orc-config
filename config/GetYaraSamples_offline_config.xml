@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<getthis reportall="" nolimits="">
+
+    <output compression="fast" />
+
+    <location>%OfflineLocation%</location>
+
+    <yara block="20M" overlap="2M" timeout="20" source="res:#yara_rules" />
+
+    <samples>
+        <sample name="orc">
+            <ntfs_find name_match="*.exe"  yara_rule="orc" />
+        </sample>
+    </samples>
+
+</getthis>
+

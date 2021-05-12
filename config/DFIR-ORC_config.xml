@@ -1,119 +1,625 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <wolf childdebug="no" command_timeout="600">
     <log disposition="truncate">DFIR-ORC_{SystemType}_{FullComputerName}_{TimeStamp}.log</log>
-    <outline disposition="truncate">DFIR-ORC_{SystemType}_{FullComputerName}.json</outline>
+    <outline disposition="truncate">DFIR-ORC_{SystemType}_{FullComputerName}_{TimeStamp}.json</outline>
 
-    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Main.7z" keyword="Main" concurrency="2" repeat="Once" compression="fast">
-        <restrictions JobMemoryLimit="3G" ProcessMemoryLimit="2G" ElapsedTimeLimit="360"/>
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Memory.7z" keyword="Memory" concurrency="2" repeat="Once" compression="fast" archive_timeout="120">
+        <restrictions ElapsedTimeLimit="360" />
+
+        <command keyword="GetRam_dmp" optional="yes" >
+            <execute name="dumpit" run="7z:#Tools|dumpit" />
+            <argument>/q /n /u</argument>
+            <output name="Dump_dumpit_{SystemType}_{FullComputerName}.dmp" source="File" argument="/o {FileName}" />
+            <output name="Dump_dumpit_{SystemType}_{FullComputerName}.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetRam_aff4" optional="yes" >
+            <execute name="winpmem" run="7z:#Tools|winpmem" />
+            <argument>--truncate --compression none -dd --verbose --acquire-memory --format map --volume_format aff4 --output -</argument>
+            <output name="Dump_winpmem_{SystemType}_{FullComputerName}.aff4" source="StdOut" />
+            <output name="Dump_winpmem_{SystemType}_{FullComputerName}.log" source="StdErr" />
+        </command>
+
+        <command keyword="GetRam_raw" optional="yes" >
+            <execute name="winpmem" run="7z:#Tools|winpmem" />
+            <argument>--truncate --compression none -dd --verbose --acquire-memory --volume_format raw --output -</argument>
+            <output name="Dump_winpmem_{SystemType}_{FullComputerName}.ram" source="StdOut" />
+            <output name="Dump_winpmem_{SystemType}_{FullComputerName}.log" source="StdErr" />
+        </command>
+    </archive>
+
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Little.7z" keyword="Little" concurrency="2" repeat="Once" compression="ultra" archive_timeout="120">
+        <restrictions ElapsedTimeLimit="480" />
+
+        <command keyword="NTFSInfo_little" queue="flush">
+            <execute name="Orc.exe" run="self:#NTFSInfo" />
+            <argument>/config=res:#NTFSInfo_little_config.xml</argument>
+            <output name="NTFSInfo_detail.7z" source="File" argument="/out={FileName}" />
+            <output name="NTFSInfo_detail.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetEVT_little">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetEVT_little_config.xml</argument>
+            <output name="Event.7z" source="File" argument="/out={FileName}" />
+            <output name="Event.log" source="StdOutErr" />
+        </command>
 
         <command keyword="SystemInfo">
-            <execute name="systeminfo.exe" run="%windir%\System32\systeminfo.exe"/>
+            <execute name="systeminfo.exe" run="%windir%\System32\systeminfo.exe" />
             <argument>/FO csv</argument>
-            <output name="Systeminfo.csv" source="StdOutErr"/>
-        </command>
-
-        <command keyword="Processes" winver="6.1+">
-            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
-            <argument>-NonInteractive -WindowStyle Hidden</argument>
-            <argument>Get-WMIObject win32_process | Export-Csv -NoTypeInformation -Encoding UTF8</argument>
-            <output name="processes.csv" source="File" argument="-Path {FileName}"/>
-            <output name="processes.log" source="StdOutErr"/>
-        </command>
-
-        <command keyword="GetEvents">
-            <execute name="DFIR-ORC.exe" run="self:#GetThis"/>
-            <argument>/config=res:#GetEvents_config.xml</argument>
-            <output name="Event.7z" source="File" argument="/out={FileName}"/>
-            <output name="Event.log" source="StdOutErr"/>
+            <output  name="Systeminfo.csv" source="StdOutErr" />
         </command>
 
         <command keyword="Autoruns">
             <execute name="autorunsc.exe" run="7z:#Tools|autorunsc.exe"/>
-            <argument>-a * -c -h -m -s -t -accepteula</argument>
+            <argument>-accepteula -c -h -s -t -a * *</argument>
             <output name="autoruns.csv" source="StdOut"/>
             <output name="autoruns.log" source="StdErr"/>
         </command>
 
-        <command keyword="NTFSInfo" queue="flush">
-            <execute name="DFIR-ORC.exe" run="self:#NTFSInfo"/>
-            <argument>/config=res:#NTFSInfo_config.xml</argument>
-            <output name="NTFSInfo_SecDesc.7z" source="File" argument="/SecDescr={FileName}"/>
-            <output name="NTFSInfo_i30Info.7z" source="File" argument="/i30info={FileName}"/>
-            <output name="NTFSInfo.7z" source="File" argument="/out={FileName}"/>
-            <output name="NTFSInfo.log" source="StdOutErr"/>
+        <command keyword="USNInfo_systemdrive" queue="flush">
+            <execute name="Orc.exe" run="self:#USNInfo" />
+            <argument>%SystemDrive%\</argument>
+            <output name="USNInfo.7z" source="File" argument="/out={FileName}" />
+            <output name="USNInfo.log" source="StdOutErr" />
         </command>
 
-        <command keyword="NTFSInfoHashPE" queue="flush" optional="yes">
-            <execute name="DFIR-ORC.exe" run="self:#NTFSInfo"/>
-            <argument>/config=res:#NTFSInfoHashPE_config.xml</argument>
-            <output name="NTFSInfoHashPE_SecDesc.7z" source="File" argument="/SecDescr={FileName}"/>
-            <output name="NTFSInfoHashPE_i30Info.7z" source="File" argument="/i30info={FileName}"/>
-            <output name="NTFSInfoHashPE.7z" source="File" argument="/out={FileName}"/>
-            <output name="NTFSInfoHashPE.log" source="StdOutErr"/>
+        <command keyword="GetSystemHives_little">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetSystemHives_little_config.xml</argument>
+            <output name="SystemHives_little.7z" source="File" argument="/out={FileName}" />
+            <output name="SystemHives_little.log" source="StdOutErr" />
         </command>
 
-        <command keyword="FatInfo">
-            <execute name="DFIR-Orc.exe" run="self:#FatInfo"/>
-            <argument>/config=res:#FatInfo_config.xml</argument>
-            <output name="FatInfo.7z" source="File" argument="/out={FileName}"/>
-            <output name="FatInfo.log" source="StdOutErr"/>
+        <command keyword="GetLegacyBootCode">
+            <execute name="Orc.exe" run="self:#GetSectors" />
+            <argument>/LegacyBootCode /SlackSpace</argument>
+            <output name="BootCode.7z" source="File" argument="/Out={FileName}" />
+            <output name="BootCode.log" source="StdOutErr" />
         </command>
 
-        <command keyword="FatInfoHashPE"  optional="yes">
-            <execute name="DFIR-Orc.exe" run="self:#FatInfo"/>
-            <argument>/config=res:#FatInfoHashPE_config.xml</argument>
-            <output name="FatInfoHashPE.7z" source="File" argument="/out={FileName}"/>
-            <output name="FatInfoHashPE.log" source="StdOutErr"/>
+        <command keyword="GetArtefacts_little">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetArtefacts_little_config.xml</argument>
+            <output name="Artefacts.7z" source="File" argument="/out={FileName}" />
+            <output name="Artefacts.log" source="StdOutErr" />
         </command>
 
-        <command keyword="USNInfo" queue="flush">
-            <execute name="DFIR-Orc.exe" run="self:#USNInfo"/>
-            <argument>*</argument>
-            <output name="USNInfo.7z" source="File" argument="/out={FileName}"/>
-            <output name="USNInfo.log" source="StdOutErr"/>
+        <command keyword="Handle">
+            <execute name="handle.exe" run="7z:#Tools|handle.exe" />
+            <argument>/accepteula</argument>
+            <argument>/a</argument>
+            <output name="handle.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetObjInfo">
+            <execute name="Orc.exe" run="self:#ObjInfo" />
+            <output name="GetObjInfo.csv" source="File" argument="/out={FileName}" />
+            <output name="GetObjInfo.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetScripts_little">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetScript_little_config.xml</argument>
+            <output name="Scripts_little.7z" source="File" argument="/out={FileName}" />
+            <output name="Scripts_little.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="Route">
+            <execute name="route.exe" run="%windir%\System32\route.exe" />
+            <argument>PRINT</argument>
+            <output  name="routes.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="Dns_cache">
+            <execute name="ipconfig.exe" run="%windir%\System32\ipconfig.exe"/>
+            <argument>/displaydns</argument>
+            <output  name="dns_cache.txt"  source="StdOutErr" />
+        </command>
+
+        <command keyword="Tcpvcon">
+            <execute name="Tcpvcon.exe" run="7z:#Tools|Tcpvcon.exe" />
+            <argument>/accepteula -a -n -c</argument>
+            <output  name="Tcpvcon.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="Netstat">
+            <execute name="netstat.exe" run="%windir%\System32\netstat.exe"/>
+            <argument>-a -n -o</argument>
+            <output  name="netstat.txt" source="StdOutErr" />
+        </command>
+
+    </archive>
+
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_FastFind.7z" keyword="FastFind" concurrency="1" repeat="Once" compression="fast" archive_timeout="120" optional="yes">
+        <restrictions ElapsedTimeLimit="480" />
+
+        <command keyword="FastFind">
+            <execute name="Orc.exe" run="self:#FastFind" />
+            <argument>/config=res:#FastFind_config.xml</argument>
+            <output name="FastFind_result.xml" source="File" argument="/out={FileName}" />
+            <output name="FastFind.log" source="StdOutErr" />
+        </command>
+    </archive>
+
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_General.7z" keyword="General" concurrency="2" repeat="Once" compression="fast" archive_timeout="120" >
+        <restrictions ElapsedTimeLimit="480" />
+
+        <command keyword="NTFSInfoQuick_alldrives" queue="flush" >
+            <execute name="Orc.exe" run="self:#NTFSInfo" />
+            <argument>/config=res:#NTFSInfoQuick_config.xml</argument>
+            <output name="NTFSInfo_quick.7z"  source="File" argument="/out={FileName}" />
+            <output name="NTFSInfo_quick.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetResidents">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetResidents_config.xml</argument>
+            <output  name="Residents.7z" source="File" argument="/out={FileName}" />
+            <!-- GetResidents stdout is often larger than the actual archive => log only stderr -->
+            <output  name="Residents.log" source="StdErr" />
+        </command>
+
+        <command keyword="GetSamples">
+            <execute name="Orc.exe" run="self:#GetSamples" />
+            <argument>/config=res:#GetSamples_config.xml</argument>
+            <output  name="GetSamples_getthis.xml"  source="File"  argument="/getthisconfig={FileName}" />
+            <output  name="GetSamples_autoruns.xml"  source="File"  argument="/autoruns={FileName}" />
+            <output  name="GetSamples_sampleinfo.csv"  source="File"  argument="/sampleinfo={FileName}" />
+            <output  name="GetSamples_timeline.csv"  source="File"  argument="/timeline={FileName}" />
+            <output  name="GetSamples.7z"  source="File"  argument="/out={FileName}" />
+            <output  name="GetSamples.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetEVT">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetEVT_config.xml</argument>
+            <output  name="Event.7z" source="File" argument="/out={FileName}" />
+            <output  name="Event.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetADS">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetADS_config.xml</argument>
+            <output name="ADS.7z" source="File" argument="/out={FileName}" />
+            <output name="ADS.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="Listdlls">
+            <execute name="Listdlls.exe" run="7z:#Tools|Listdlls.exe" />
+            <argument>/accepteula</argument>
+            <output name="Listdlls.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="BITS_jobs" winver="6.0+">
+            <execute name="bitsadmin.exe" run="%windir%\System32\bitsadmin.exe" />
+            <argument>/list /allusers /verbose</argument>
+            <output  name="BITS_jobs.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="VSS_list">
+            <execute name="Orc.exe" run="self:#NTFSUtil" />
+            <argument>/VSS</argument>
+            <output  name="VSS_list.csv" source="File" argument="/out={FileName}" />
+            <output  name="VSS_list.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="EnumLocs">
+            <execute name="Orc.exe" run="self:#NTFSUtil" />
+            <argument>/enumlocs</argument>
+            <output name="Enumlocs.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetEXE_TMP">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetExeTMP_config.xml</argument>
+            <output  name="EXE_TMP.7z" source="File" argument="/out={FileName}" />
+            <output  name="EXE_TMP.log" source="StdOutErr" />
         </command>
 
         <command keyword="GetArtefacts">
-            <execute name="DFIR-Orc.exe" run="self:#GetThis"/>
+            <execute name="Orc.exe" run="self:#GetThis" />
             <argument>/config=res:#GetArtefacts_config.xml</argument>
-            <output name="Artefacts.7z" source="File" argument="/out={FileName}"/>
-            <output name="Artefacts.log" source="StdOutErr"/>
-		</command>
+            <output  name="Artefacts.7z" source="File" argument="/out={FileName}" />
+            <output  name="Artefacts.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetExtAttrs">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetExtAttrs_config.xml</argument>
+            <output  name="ExtAttrs.7z" source="File" argument="/out={FileName}" />
+            <output  name="ExtAttrs.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetTextLogs">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetTextLogs_config.xml</argument>
+            <output  name="TextLogs.7z" source="File" argument="/out={FileName}" />
+            <output  name="TextLogs.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetScripts">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetScript_config.xml</argument>
+            <output  name="Scripts.7z" source="File" argument="/out={FileName}" />
+            <output  name="Scripts.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetErrors">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetErrors_config.xml</argument>
+            <output  name="Errors.7z" source="File" argument="/out={FileName}" />
+            <output  name="Errors.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetMemoryDmp" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetMemDmp_config.xml</argument>
+            <output  name="Memory_dmp.7z" source="File" argument="/out={FileName}" />
+            <output  name="Memory_dmp.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="Arp_cache">
+            <execute name="arp.exe" run="%windir%\System32\arp.exe" />
+            <argument>-a</argument>
+            <output  name="arp_cache.txt"  source="StdOutErr" />
+        </command>
+
+        <command keyword="GetCatroot" optional="yes" queue="flush">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetCatRoot_config.xml</argument>
+            <output  name="CatRoot.7z" source="File" argument="/out={FileName}" />
+            <output  name="CatRoot.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetSDS" optional="yes" >
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetSDS_config.xml</argument>
+            <output  name="Secure.7z" source="File" argument="/out={FileName}" />
+            <output  name="Secure.log" source="StdOutErr" />
+        </command>
+
     </archive>
 
-    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Hives.7z" keyword="Hives" concurrency="2" repeat="Once" compression="fast">
-        <restrictions JobMemoryLimit="3G" ProcessMemoryLimit="1G" ElapsedTimeLimit="360"/>
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Detail.7z" keyword="Detail" concurrency="2" repeat="Once" compression="fast" archive_timeout="120" >
+        <restrictions ElapsedTimeLimit="480" />
+
+        <command keyword="NTFSInfoDetail_alldrives" systemtype="DomainController|Workstation" queue="flush" >
+            <execute name="Orc.exe" run="self:#NTFSInfo" />
+            <argument>/config=res:#NTFSInfoDetail_alldrives_config.xml</argument>
+            <output name="NTFSInfo_i30Info.7z" source="File" argument="/i30info={FileName}"/>
+            <output name="NTFSInfo_SecDesc.7z" source="File" argument="/SecDescr={FileName}"/>
+            <output name="NTFSInfo_detail.7z"  source="File" argument="/out={FileName}" />
+            <output name="NTFSInfo_detail.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="NTFSInfoDetail_systemdrive" systemtype="Server" queue="flush" >
+            <execute name="Orc.exe" run="self:#NTFSInfo" />
+            <argument>/config=res:#NTFSInfoDetail_systemdrive_config.xml</argument>
+            <output name="NTFSInfo_i30Info.7z" source="File" argument="/i30info={FileName}"/>
+            <output name="NTFSInfo_SecDesc.7z" source="File" argument="/SecDescr={FileName}"/>
+            <output name="NTFSInfo_detail.7z"  source="File" argument="/out={FileName}" />
+            <output name="NTFSInfo_detail.log" source="StdOutErr" />
+        </command>
 
         <command keyword="GetSystemHives">
-            <execute name="DFIR-Orc.exe" run="self:#GetThis"/>
-            <argument>/config=res:#GetSystemHives_config.xml</argument>
-            <output name="SystemHives.7z" source="File" argument="/out={FileName}"/>
-            <output name="SystemHives.log" source="StdOutErr"/>
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetSystemHives_config.xml /shadows</argument>
+            <output  name="SystemHives.7z" source="File" argument="/out={FileName}" />
+            <output  name="SystemHives.log" source="StdOutErr" />
         </command>
 
         <command keyword="GetUserHives">
-            <execute name="DFIR-Orc.exe" run="self:#GetThis"/>
-            <argument>/config=res:#GetUserHives_config.xml</argument>
-            <output name="UserHives.7z" source="File" argument="/out={FileName}"/>
-            <output name="UserHives.log" source="StdOutErr"/>
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetUserHives_config.xml /shadows</argument>
+            <output  name="UserHives.7z" source="File" argument="/out={FileName}" />
+            <output  name="UserHives.log" source="StdOutErr" />
         </command>
+
+        <command keyword="FatInfo" >
+            <execute name="Orc.exe" run="self:#FatInfo" />
+            <argument>/config=res:#FatInfoDetail_config.xml</argument>
+            <output name="FatInfo_detail.7z"  source="File" argument="/out={FileName}" />
+            <output name="FatInfo_detail.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="USNInfo" queue="flush">
+            <execute name="Orc.exe" run="self:#USNInfo" />
+            <argument>*</argument>
+            <output  name="USNInfo.7z" source="File" argument="/out={FileName}" />
+            <output  name="USNInfo.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetUefiFull">
+            <execute name="Orc.exe" run="self:#GetSectors" />
+            <argument>/UefiFull</argument>
+            <output  name="UefiFull.7z" source="File" argument="/Out={FileName}" />
+            <output  name="UefiFull.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetFuzzyHash" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetFuzzyHash_config.xml /fuzzyhash=tlsh,ssdeep</argument>
+            <output  name="FuzzyHash.7z" source="File" argument="/out={FileName}" />
+            <output  name="FuzzyHash.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="FatInfoPE" queue="flush" optional="yes">
+            <execute name="Orc.exe" run="self:#FatInfo" />
+            <argument>/config=res:#FatInfoHashPE_config.xml</argument>
+            <output name="FatInfo_pehash.7z"  source="File" argument="/out={FileName}" />
+            <output name="FatInfo_pehash.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="FatInfoFirstBytes"  queue="flush" optional="yes">
+            <execute name="Orc.exe" run="self:#FatInfo" />
+            <argument>/config=res:#FatInfoFirstBytes_config.xml</argument>
+            <output name="FatInfo_firstbytes.7z"  source="File" argument="/out={FileName}" />
+            <output name="FatInfo_firstbytes.log" source="StdOutErr" />
+        </command>
+    </archive>
+
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Browsers.7z" keyword="Browsers" concurrency="2" repeat="Once" compression="Normal" archive_timeout="120" >
+        <restrictions ElapsedTimeLimit="360" />
+
+        <command keyword="GetBrowsersHistory">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetBrowsersHistory_config.xml</argument>
+            <output  name="Browsers_history.7z" source="File" argument="/out={FileName}" />
+            <output  name="Browsers_history.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetBrowsersArtefacts">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetBrowsersArtefacts_config.xml</argument>
+            <output  name="Browsers_artefacts.7z" source="File" argument="/out={FileName}" />
+            <output  name="Browsers_artefacts.log" source="StdOutErr" />
+        </command>
+    </archive>
+
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_SAM.7z" keyword="SAM" concurrency="2" repeat="Once" compression="fast" archive_timeout="120">
+        <restrictions ElapsedTimeLimit="60" />
 
         <command keyword="GetSamHive">
-            <execute name="DFIR-Orc.exe" run="self:#GetThis"/>
+            <execute name="Orc.exe" run="self:#GetThis" />
             <argument>/config=res:#GetSamHive_config.xml</argument>
-            <output name="SAM.7z" source="File" argument="/out={FileName}"/>
-            <output name="SAM.log" source="StdOutErr"/>
+            <output  name="SAM.7z" source="File" argument="/out={FileName}" />
+            <output  name="SAM.log" source="StdOutErr" />
         </command>
     </archive>
 
-    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Yara.7z" keyword="Yara" concurrency="2" repeat="Once" compression="fast" archive_timeout="240" optional="yes">
-        <restrictions JobMemoryLimit="3G" ProcessMemoryLimit="3G" ElapsedTimeLimit="240"/>
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Yara.7z" keyword="Yara" concurrency="2" repeat="Once" compression="fast" archive_timeout="120" optional="yes">
+        <restrictions ElapsedTimeLimit="480" />
 
         <command keyword="GetYara">
-            <execute name="DFIR-Orc.exe" run="self:#GetThis"/>
+            <execute name="Orc.exe" run="self:#GetThis" />
             <argument>/config=res:#GetYaraSamples_config.xml</argument>
-            <output name="Yara.7z" source="File" argument="/out={FileName}"/>
-            <output name="Yara.log" source="StdOutErr"/>
+            <output  name="Yara.7z" source="File" argument="/out={FileName}" />
+            <output  name="Yara.log" source="StdOutErr" />
         </command>
     </archive>
+
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Powershell.7z" keyword="Powershell" concurrency="2" repeat="Once" compression="fast" archive_timeout="120">
+        <restrictions ElapsedTimeLimit="60" />
+
+        <command keyword="DNS_records" systemtype="DomainController|Server" winver="6.0+" >
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>if (Get-Command Get-DnsServerZone -CommandType Function -ErrorAction SilentlyContinue) { Get-DnsServerZone | ForEach-Object {write-host '' ; write-host '***' $_.ZoneName '***' ; write-host '' ; Get-DnsServerResourceRecord -ZoneName ($_.ZoneName)} } else { Get-WmiObject -Namespace root\MicrosoftDNS MicrosoftDNS_Domain | ? { $_.ContainerName -NotLike '..RootHints' -And $_.ContainerName -NotLike '..Cache' } | select ContainerName | Sort-Object ContainerName | Get-Unique -AsString | % { dnscmd /zoneprint $_.ContainerName } }</argument>
+            <output  name="DNS_records.txt" source="StdOut" />
+            <output  name="DNS_records.log" source="StdErr" />
+        </command>
+
+        <command keyword="EventConsumer"  winver="6.0+">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>Get-WMIObject -Namespace root\Subscription -Class __EventConsumer</argument>
+            <output  name="EventConsumer.txt" source="StdOut" />
+            <output  name="EventConsumer.log" source="StdErr" />
+        </command>
+
+        <command keyword="ADComputers" systemtype="DomainController" winver="6.0+" >
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>Import-Module ActiveDirectory ; $TimeAgo = (Get-Date).AddMonths(-3) ; Get-ADComputer -Filter {enabled -eq $true -and lastLogonTimeStamp -gt $TimeAgo} -Properties DNSHostName | Select DNSHostName | ConvertTo-Csv</argument>
+            <output  name="AD_computers.csv" source="StdOut" />
+            <output  name="AD_computers.log" source="StdErr" />
+        </command>
+
+        <command keyword="Processes1" winver="6.0+" >
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>Get-WMIObject win32_process | Export-Csv -NoTypeInformation -Encoding UTF8</argument>
+            <output  name="processes1.csv" source="File" argument="-Path {FileName}" />
+            <output  name="processes1.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="Processes2" winver="6.0+" >
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>Get-Process | Export-Csv -NoTypeInformation -Encoding UTF8</argument>
+            <output  name="processes2.csv" source="File" argument="-Path {FileName}" />
+            <output  name="processes2.log" source="StdOutErr" />
+        </command>
+
+    </archive>
+
+
+    <!--             -->
+    <!-- ORC OFFLINE -->
+    <!--             -->
+
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Offline.7z" keyword="ORC_Offline" concurrency="2" repeat="Once" compression="fast" optional="yes">
+
+        <command keyword="NTFSInfo_offline" queue="flush">
+            <execute name="Orc.exe" run="self:#NTFSInfo" />
+            <argument>/config=res:#NTFSInfo_offline_config.xml</argument>
+            <output  name="NTFSInfo_i30Info.7z" source="File" argument="/i30info={FileName}"/>
+            <output  name="NTFSInfo_SecDesc.7z" source="File" argument="/SecDescr={FileName}"/>
+            <output  name="NTFSInfo_detail.7z"  source="File" argument="/fileinfo={FileName}" />
+            <output  name="NTFSInfo_detail.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="FatInfo_offline" queue="flush">
+            <execute name="Orc.exe" run="self:#FatInfo" />
+            <argument>/config=res:#FatInfo_offline_config.xml</argument>
+            <output name="FatInfo_detail.7z"  source="File" argument="/out={FileName}" />
+            <output name="FatInfo_detail.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="USNInfo_offline" queue="flush">
+            <execute name="Orc.exe" run="self:#USNInfo" />
+            <output  name="USNInfo.7z" source="File" argument="/out={FileName}" />
+            <output  name="USNInfo.log" source="StdOutErr" />
+            <argument>%OfflineLocation%</argument>
+        </command>
+
+        <command keyword="GetFuzzyHash_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetFuzzyHash_offline_config.xml /fuzzyhash=tlsh,ssdeep</argument>
+            <output  name="FuzzyHash.7z" source="File" argument="/out={FileName}" />
+            <output  name="FuzzyHash.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetSystemHives_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetHives_offline_config.xml</argument>
+            <output  name="SystemHives.7z" source="File" argument="/out={FileName}" />
+            <output  name="SystemHives.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetUserHives_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetUserHives_offline_config.xml</argument>
+            <output  name="UserHives.7z" source="File" argument="/out={FileName}" />
+            <output  name="UserHives.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetLegacyBootCode_offline">
+            <execute name="Orc.exe" run="self:#GetSectors" />
+            <output  name="BootCode.7z" source="File" argument="/LegacyBootCode /SlackSpace /Out={FileName}" />
+            <output  name="BootCode.log" source="StdOutErr" />
+        </command>
+
+        <!-- Ajout GetUefiFull -->
+
+        <command keyword="GetUefiFull_offline">
+            <execute name="Orc.exe" run="self:#GetSectors" />
+            <output  name="UefiFull.7z" source="File" argument="/UefiFull /Out={FileName}" />
+            <output  name="UefiFull.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetSDS_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetSDS_offline_config.xml</argument>
+            <output  name="Secure.7z" source="File" argument="/out={FileName}" />
+            <output  name="Secure.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetADS_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetADS_offline_config.xml</argument>
+            <output name="ADS.7z" source="File" argument="/out={FileName}" />
+            <output name="ADS.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetCatroot_offline"  queue="flush">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetCatRoot_offline_config.xml</argument>
+            <output  name="CatRoot.7z" source="File" argument="/out={FileName}" />
+            <output  name="CatRoot.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetEVT_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetEVT_offline_config.xml</argument>
+            <output  name="Event.7z" source="File" argument="/out={FileName}" />
+            <output  name="Event.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetEXE_TMP_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetEXE_TMP_offline_config.xml</argument>
+            <output  name="EXE_TMP.7z" source="File" argument="/out={FileName}" />
+            <output  name="EXE_TMP.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetArtefacts_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetArtefacts_offline_config.xml</argument>
+            <output  name="Artefacts.7z" source="File" argument="/out={FileName}" />
+            <output  name="Artefacts.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetTextLogs_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetTextLogs_offline_config.xml</argument>
+            <output  name="TextLogs.7z" source="File" argument="/out={FileName}" />
+            <output  name="TextLogs.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetScripts_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetScript_offline_config.xml</argument>
+            <output  name="Scripts.7z" source="File" argument="/out={FileName}" />
+            <output  name="Scripts.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetErrors_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetErrors_offline_config.xml</argument>
+            <output  name="Errors.7z" source="File" argument="/out={FileName}" />
+            <output  name="Errors.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetMemoryDmp_offline" >
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetMemDmp_offline_config.xml</argument>
+            <output  name="Memory_dmp.7z" source="File" argument="/out={FileName}" />
+            <output  name="Memory_dmp.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetBrowsersComplet_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetBrowsersComplet_offline_config.xml</argument>
+            <output  name="Browsers_complet.7z" source="File" argument="/out={FileName}" />
+            <output  name="Browsers_complet.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetSamHive_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetSAM_hive_offline_config.xml</argument>
+            <output  name="SAM.7z" source="File" argument="/out={FileName}" />
+            <output  name="SAM.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetExtAttrs_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetExtAttrs_offline_config.xml</argument>
+            <output  name="ExtAttrs.7z" source="File" argument="/out={FileName}" />
+            <output  name="ExtAttrs.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetResidents_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetResidents_offline_config.xml</argument>
+            <output  name="Residents.7z" source="File" argument="/out={FileName}" />
+            <output  name="Residents.log" source="StdOutErr" />
+        </command>
+
+    </archive>
+
+    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Debug.7z" keyword="Debug" concurrency="1" repeat="Once" compression="fast" archive_timeout="120" optional="yes">
+
+        <command keyword="GetMFT">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetMFT_config.xml</argument>
+            <output  name="MFT.7z" source="File" argument="/out={FileName}" />
+            <output  name="MFT.log" source="StdOutErr" />
+        </command>
+
+    </archive>
+
 </wolf>

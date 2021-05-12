@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<getthis reportall="" nolimits="">
+  <location>%OfflineLocation%</location>
+  <samples>
+    <sample name="extAttrs">
+      <ntfs_find ea_match="?*" />
+      <ntfs_exclude path="\$Extent\$UsnJrnl" ads="$J" />
+    </sample>
+  </samples>
+</getthis>

@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<getthis reportall="" nolimits="" >
+  <output compression="fast"/>
+  <location>%OfflineLocation%</location>
+  <samples> 
+    <sample name="network">
+      <ntfs_find path_match="*\system32\dns\*.log" />
+      <ntfs_find path_match="*\system32\dhcp\*.log" />
+      <ntfs_find name="pfirewall.log" />
+      <ntfs_find path_match="*\system32\drivers\etc\*" />
+    </sample>
+
+    <sample name="divers">
+      <ntfs_find name="SchedLgU.txt" />
+      <ntfs_find name_match="setupapi*.log" />
+      <ntfs_find name="mrt.log" />
+      <ntfs_find name="userenv.log" />
+      <ntfs_find name="userenv.bak" />
+    </sample>
+
+    <sample name="AV_log">
+        <!-- Avast https://forum.avast.com/index.php?topic=212738.0 -->
+        <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Avast Software\Avast\Log\*" />
+        <ntfs_find path_match="\ProgramData\Avast Software\Avast\Log\*" />
+        <ntfs_find path_match="\Users\*\Avast Software\Avast\Log\*" />
+        <!-- Avira https://support.avira.com/hc/en/community/posts/360006303377-How-To-Check-My-Scan-Logs -->
+        <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Avira\Antivirus\LOGFILES\*" />
+        <ntfs_find path_match="\ProgramData\Avira\Antivirus\LOGFILES\*" />
+        <!-- BitDefender https://www.bitdefender.com/consumer/support/answer/1477/ -->
+        <ntfs_find path_match="\Documents and Settings\All Users\Application Data\BitDefender\Desktop\Profiles\Logs\*.xml" />
+        <ntfs_find path_match="\ProgramData\BitDefender\Desktop\Profiles\Logs\*.xml" />
+        <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Bitdefender\Endpoint Security\Logs\*" />
+        <ntfs_find path_match="\ProgramData\Bitdefender\Endpoint Security\Logs\*" />
+        <!-- Ivanti/Bitdefender https://forums.ivanti.com/s/question/0D51B00005TOuJcSAL/bitdefender-logs -->
+        <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Ivanti\Endpoint\Logs\*" />
+        <ntfs_find path_match="\ProgramData\Ivanti\Endpoint\Logs\*" />
+        <!-- ESET https://github.com/laciKE/EsetLogParser -->
+        <ntfs_find path_match="\Documents and Settings\All Users\Application Data\ESET\*\Logs\virlog.dat" />
+        <ntfs_find path_match="\ProgramData\ESET\*\Logs\virlog.dat" />
+        <!-- F-Secure (old ?) https://community.f-secure.com/en/discussion/107401/no-log-file -->
+        <ntfs_find path_match="\Program Files*\F-Secure\Common\Logfile.log" />
+        <ntfs_find path_match="\Documents and Settings\All Users\Application Data\F-Secure\Log\*" />
+        <ntfs_find path_match="\ProgramData\F-Secure\Log\*" />
+        <ntfs_find path_match="\Users\*\AppData\Local\F-Secure\Log\*" />
+        <!-- McAfee EndpointSecurity https://docs.mcafee.com/bundle/endpoint-security-10.6.0-common-client-product-guide-windows/page/GUID-2E289950-D6E3-4F7F-93EE-998790E5E028.html -->
+        <ntfs_find path_match="\Documents and Settings\All Users\Application Data\McAfee\Endpoint Security\Logs\*.log" />
+        <ntfs_find path_match="\ProgramData\McAfee\Endpoint Security\Logs\*.log" />
+        <!-- McAfee DesktopProtection http://virusscan.helpmax.net/fr/partie%C2%A0iv-surveillance-analyse-et-parametrage-de-votre-protection/surveillance-de-lactivite-de-votre-environnement/outils-de-surveillance-de-lactivite/utilisation-des-journaux-dactivite/ -->
+        <ntfs_find path_match="\Documents and Settings\All Users\Application Data\McAfee\DesktopProtection\*.txt" />
+        <ntfs_find path_match="\ProgramData\McAfee\DesktopProtection\*.txt" />
+        <!-- Sophos https://community.sophos.com/kb/en-us/43391 -->
+        <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Sophos\Sophos *\Logs\*" />
+        <ntfs_find path_match="\ProgramData\Sophos\Sophos *\Logs\*" />
+        <!-- Symantec Endpoint Protection https://knowledge.broadcom.com/external/article/152795/where-can-i-find-endpoint-protection-cli.html -->
+        <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Symantec\Symantec Endpoint Protection\*.log" /> <!-- wildcard * is greedy and recursive, this will match all .log files anywhere inside the subtree -->
+        <ntfs_find path_match="\ProgramData\Symantec\Symantec Endpoint Protection\*.log" />
+        <!-- Windows Defender and Kaspersky handle their logs in the Windows Event Log. TrendMicro remains unclear... -->
+    </sample>
+
+    <sample name="hives_log" >
+      <ntfs_find name_match="ntuser*.log*" />
+      <ntfs_find name_match="amcach*.log*" />
+      <ntfs_find name_match="usrcla*.log*" />
+      <ntfs_find name_match="settin*.log*" />
+      <ntfs_find name_match="sam*.log*" />
+      <ntfs_find name_match="securi*.log*" />
+      <ntfs_find name_match="softwa*.log*" />
+      <ntfs_find name_match="system*.log*" />
+      <ntfs_find name_match="defaul*.log*" />
+    </sample>	
+
+    <sample name="IIS_log">
+      <ntfs_find name_match="u_ex*.log" />
+    </sample>
+
+    <sample name="powershell_traces" >
+      <ntfs_find name="ConsoleHost_history.txt" />
+      <ntfs_find path_match="*\Appdata\Local\Microsoft\Windows\Powershell\CommandAnalysis\*" />
+      <ntfs_find path_match="*\Appdata\Local\Microsoft\Windows\Powershell\ModuleAnalysisCache" />
+    </sample>
+
+    <sample name=".log" >
+      <ntfs_find name_match="*.log" />
+    </sample>
+  </samples>
+</getthis>

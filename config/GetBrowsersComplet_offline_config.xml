@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<getthis reportall="" nolimits="">
+  <location>%OfflineLocation%</location>
+  <samples>
+  <!-- Configuration pour récupérer tous les artefacts intéressants correspond à GetBrowsersHistory + GetBrowsersCache + d'autres artefacts d'usage plus situationel -->
+    <sample name="Firefox_XP_Complet">
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\profiles.ini"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\places.sqlite*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\downloads.sqlite*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\cookies.sqlite*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\bookmarkbackups\bookmarks*.jsonlz4"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\content-prefs.sqlite"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\addons.json"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\extensions.ini"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\extensions.json"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\extensions\*.xpi"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\storage.sqlite"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\storage\default\*\cache\caches.sqlite"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\storage\default\*\idb\*.sqlite"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\permissions.sqlite"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\prefs.js"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\webappsstore.sqlite"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\key*.db"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\sessionstore.js"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\sessionstore-backups\*.js*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\formhistory.sqlite"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\cert*.db"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\datareporting\*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\saved-telemetry-pings\*"/>
+      <!-- Cache -->
+      <ntfs_find path_match="\Documents and Settings\*\Local Settings\Application Data\Mozilla\Firefox\Profiles\*\cache2\entries\*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Local Settings\Application Data\Mozilla\Firefox\Profiles\*\cache2\index*"/>
+    </sample>
+
+    <sample name="Firefox_Vista_Complet">
+      <!-- Old versions -->
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\downloads.sqlite"/>
+      <!-- Current version -->
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\profiles.ini"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Mozilla\Firefox\Crash Reports\*"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\places.sqlite*"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\downloads.sqlite*"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\cookies.sqlite*"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\bookmarkbackups\bookmarks*.jsonlz4"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\content-prefs.sqlite"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\addons.json"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\extensions.json"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\extensions\*.xpi"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\storage.sqlite"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\storage\default\*\cache\caches.sqlite"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\storage\default\*\idb\*.sqlite"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\permissions.sqlite"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\prefs.js"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\webappsstore.sqlite"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\protections.sqlite"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\key*.db"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\logins.json"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\sessionstore.jsonlz4"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\sessionstore-backups\*.jsonlz4*"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\sessionstore-backups\*.baklz4"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\favicon.sqlite"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\formhistory.sqlite"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\cert*.db"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\datareporting\*"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\saved-telemetry-pings\*"/>
+      <!-- Cache -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Mozilla\Firefox\Profiles\*\cache2\entries\*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Mozilla\Firefox\Profiles\*\cache2\index*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Mozilla\Firefox\Profiles\*\jumpListCache\*.ico"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Mozilla\Firefox\Profiles\*\thumbnails\*.png"/>
+    </sample>
+
+    <sample name="Chrome_XP_Complet">
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Bookmarks*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\History*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Archived History*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Cookies*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Extensions\*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Login Data*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Favicons*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Network Action Predictor*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Web Data*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Top Sites*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Shortcuts*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Preferences*"/>
+      <!-- Cache -->
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Cache\*"/>
+    </sample>
+
+    <sample name="Chrome_50_Complet"> <!-- L'étoile après Chrome c'est pour inclure Canary -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Bookmarks"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\History*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Archived History*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Visited Links"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Cookies*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Extension Cookies"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Extensions\*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Extension Activity\*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Extension State\*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Login Data*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Current Session"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Current Tabs"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Last Session"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Last Tabs"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Favicons*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\QuotaManager"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Network Action Predictor*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Web data*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Top Sites*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Thumbnails"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Shortcuts*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Preferences"/>
+      <!-- Cache -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\*Cache\*"/>
+    </sample>
+
+
+    <sample name="Safari_XP_Complet">
+      <!-- A affiner -->
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Apple Computer\Safari\*"/>
+    </sample>
+
+    <sample name="Safari_Vista_Complet">
+      <!-- A affiner -->
+      <ntfs_find path_match="\Users\*\AppData\*\Apple Computer\Safari\*"/>
+    </sample>
+
+    <sample name="IE_XP_Complet">
+      <!-- IE sous XP -->
+      <ntfs_find path_match="\Documents and Settings\*\Local Settings\History\History.ie5\*.dat"/>
+      <ntfs_find path_match="\Documents and Settings\*\Cookies\*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Local Settings\Temporary Internet Files\*\Content.IE5\*.dat"/>
+      <!-- IE 7-8 sous XP uniquement -->
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Microsoft\*\Credentials\*"/>
+      <!-- IE 8 sous XP uniquement -->
+      <ntfs_find path_match="\Documents and Settings\*\Local Settings\Application Data\Microsoft\Internet Explorer\Recovery\*Active\*.dat"/>
+    </sample>
+
+    <sample name="IE_Vista_Complet">
+      <!-- IE 7-9 sous Vista+ -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\*\History.ie5\*\*.dat"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\*\Temporary Internet Files\*\Content.IE5\*.dat"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Cookies\*"/>
+      <!-- IE 8-9 sous Vista et 7 -->
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Microsoft\Windows\PrivacIE\*index.dat"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Microsoft\Windows\IETldCache\*index.dat"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\Feeds Cache\index.dat"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\*\Microsoft\Internet Explorer\DOMStore\index.dat"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Internet Explorer\Recovery\*.dat"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Microsoft\Internet Explorer\UserData\*.dat"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Microsoft\Windows\IEDownloadHistory\index.dat"/>
+      <!-- IE 10 sous 7 SP1 et 8 -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\WebCache\*.dat"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\WebCache\*.log"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\WebCache\*.jrs"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\WebCache\*.chk"/>
+      <!-- IE 11 sous 7,8.1 et 10 -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\INetCache\*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\INetCookies\*"/>
+    </sample>
+
+    <sample name="Edge_Spartan_Complet">
+      <!-- Edge ancienne version -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Packages\Microsoft.MicrosoftEdge_*\AC\MicrosoftEdge\User\Default\DataStore\Data\nouser1\*\DBStore\*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Packages\Microsoft.MicrosoftEdge_*\AC\MicrosoftEdge\User\Default\Favorites\*"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Microsoft\Windows\WebCache\*.dat"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Microsoft\Windows\WebCache\*.log"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Microsoft\Windows\WebCache\*.jrs"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Microsoft\Windows\WebCache\*.jfm"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Microsoft\Windows\WebCache\*.chk"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\AC\#!*\MicrosoftEdge\ExtensionsByteCodeCache\Extensions\EdgeExtension_*_f8jsg5mm64m62\*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\AC\#!*\MicrosoftEdge\User\Default\DOMStore\*.xml"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\AC\MicrosoftEdge\User\Default\Recovery\Active\*.dat"/>
+      <ntfs_find path_match="\Users\*\MicrosoftEdgeBackups\backups\MicrosoftEdgeBackup*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\AC\MicrosoftEdge\User\Default\DataStore\Data\nouser1\*\Favorites\*_Icon.ico"/>
+      <!-- Cache -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Packages\Microsoft.MicrosoftEdge_8wekyb3d8bbwe\AC\#!*\MicrosoftEdge\Cache\*"/>
+    </sample>
+
+    <sample name="Edge_Anhaeim_Complet">
+      <!-- Edge nouvelle version basée sur Chromium -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Bookmarks"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\History*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Archived History*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Visited Links"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Cookies*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Extension Cookies"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Extensions\*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Extension Activity\*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Extension State\*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Login Data*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Current Session"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Current Tabs"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Last Session"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Last Tabs"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Favicons*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\QuotaManager"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Network Action Predictor*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Web data*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Top Sites*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Shortcuts*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Preferences"/>
+      <!-- Cache -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\*Cache\*"/>
+    </sample>
+    
+    <sample name="Flash_Player_Complet">
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Macromedia\FlashPlayer\#SharedObjects\*.sol"/>
+    </sample>
+
+  </samples>
+</getthis>
+

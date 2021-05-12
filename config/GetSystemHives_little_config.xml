@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<getthis reportall="" flushregistry="yes">
+  <location>%SystemDrive%</location>
+  <samples MaxPerSampleBytes="500MB" MaxTotalBytes="2048MB">
+    <sample>
+        <ntfs_find name="Amcache.hve" header="regf" />
+        <ntfs_find name="Amcache.hve.tmp" />
+        <ntfs_find name="Amcache.hve.log1" />
+        <ntfs_find name="Amcache.hve.log2" />
+    </sample>
+  </samples>
+</getthis>

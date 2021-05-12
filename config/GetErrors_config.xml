@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<getthis reportall="">
+  <location>%SystemDrive%\</location>
+  <samples MaxPerSampleBytes="512MB" MaxTotalBytes="2GB" MaxSampleCount="200000">
+    <sample name="minidump">
+      <ntfs_find path_match="\Windows\Minidump\*" />
+      <ntfs_find name_match="*.mdmp" />
+    </sample>
+    <sample name="WER">
+      <ntfs_find name_match="*.wer" />
+	  <ntfs_find name_match="WER*.sysdata.xml" />
+    </sample>
+    <sample name="Drwtsn">
+      <ntfs_find name="Drwtsn32.log" />
+    </sample>
+    <sample name="memory_dmp" MaxTotalBytes="800MB">
+      <ntfs_find name_match="*memory.dmp" />
+    </sample>
+  </samples>
+</getthis>

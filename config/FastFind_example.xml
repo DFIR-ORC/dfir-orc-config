@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<fastfind version="foobar_YYYYMMDD">
+    <filesystem>
+        <location shadows="yes">%SystemDrive%</location>
+        <yara block="20M" overlap="2M" timeout="120" source="res:#yara_rules" scan_method="blocks" />
+
+        <ntfs_find name="explorer.exe" />
+        <ntfs_find name_match="expl*.exe" />
+        <ntfs_find name_regex="expl.{4}\.[ex]+" />
+        <ntfs_find path="\windows\explorer.exe"/>
+        <ntfs_find path_match="*\explorer.exe" />
+        <ntfs_find path_regex="\\win.*\\explorer.exe" />
+        <!-- Always use another "metadata match" (path, name, size) when using md5, sha1, sha256, contains[_hex] and yara_rule, otherwise FastFind could end up having to read (and hash or yara-parse) every single files on the volume ! -->
+        <ntfs_find size="0" sha1="da39a3ee5e6b4b0d3255bfef95601890afd80709" />    <!-- matches the empty file -->
+        <!-- The use of "header[_hex|_regex]" is much more costly than a "metadata match" since it requires to read some data from the file, but less than a full content match so this can be used to narrow down the subset of files to parse for full-content matching (hashes, contains and yara) -->
+        <ntfs_find header="MZ" size_le="10M" contains="getthis_collection" />   <!-- matches ORC and FastFind -->
+        <ntfs_find header="MZ" size_le="10M" contains_hex="250073002000280043006100740061007300740072006f00700068006900630020006600610069006c00750072006500" /> <!-- matches ORC and FastFind -->
+        <ntfs_find size_le="15M" size_ge="10M" yara_rule="orc" />   <!-- matches ORC (FastFind should be smaller) -->
+
+        <ntfs_find ads="$J" />
+        <ntfs_find path="\$Extend\$UsnJrnl" ads="$J" />
+
+    </filesystem>
+
+    <registry>
+        <location>%SystemDrive%</location>
+        <hive name="NTUSER">
+            <ntfs_find name="NTUSER.DAT" />
+            <!-- For a listing of every values (and their corresponding data) below a certain key, use value_regex=".*" -->
+            <registry_find key_path_regex="\\Software(\\Wow6432Node)?\\Microsoft\\Windows\\CurrentVersion\\Run" value_regex=".*" />
+        </hive>
+        <hive name="SOFTWARE">
+            <ntfs_find path="\Windows\System32\config\SOFTWARE" />
+            <!-- data_contains is case sensitive -->
+            <registry_find key_path="\Microsoft\Windows NT\CurrentVersion" value="SystemRoot" value_type="REG_SZ" data_contains="\Win" />
+        </hive>
+        <hive name="SYSTEM">
+            <ntfs_find path="\Windows\System32\config\SYSTEM" />
+            <!-- matching only on key will not retrieve any value nor data, so the example below will only list services -->
+            <registry_find key_path_regex="\\ControlSet[0-9]{3}\\Services\\[^\\]+" />
+            <!-- data_hex must match the same length as the targeted value type (ie. for a REG_DWORD, data_hex must be 4-bytes long) -->
+            <registry_find key_path="\Select" value="Current" value_type="REG_DWORD" data_hex="00000001" />
+        </hive>
+    </registry>
+
+    <object>
+        <!-- object "type" can be one of the following : Type, Directory, Session, WindowStation, Event, KeyedEvent, Callback, Job, Mutant, Section, Semaphore, SymbolicLink, Device, Driver, ALPCPort, FilterConnectionPort, Key, File -->
+        <object_find type="Device" name="Ntfs" />
+        <object_find type="Device" path="\Ntfs" />
+        <object_find type="Mutant" name_regex="\{A3BD3259-3E4F-[a-f0-9]{4}-84C8-F0463A9D3EB5\}" />
+        <object_find type="Mutant" path_regex="\\Sessions\\[0-9]+\\.*" />
+    </object>
+</fastfind>

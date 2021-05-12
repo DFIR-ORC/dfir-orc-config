@@ -1,14 +1,11 @@
 <?xml version="1.0"?>
 
 <fatinfo resurrect="yes">
-  <location>*</location>
+  <location>%OfflineLocation%</location>
   <columns>
-    <default>ComputerName,VolumeID,Default,RecordInUse</default>
+    <default>ComputerName,VolumeID,Default,RecordInUse,FirstBytes</default> 
     <default>Details</default>
     <omit SizeGT="100M">MD5,SHA1,PeSHA1,PeSHA256,Authenticode</omit>
-    <add HasPE="">MD5,SHA1,PeSHA1,PeSHA256,Authenticode</add>  
+    <add HasPE="">MD5,SHA1,PeSHA1,PeSHA256,Authenticode</add>
   </columns>
 </fatinfo>
-
-
-

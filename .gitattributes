@@ -1,0 +1,4 @@
+* text eol=crlf
+*.exe binary
+*.dll binary
+*.7z binary

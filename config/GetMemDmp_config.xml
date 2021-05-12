@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<getthis reportall="">
+  <output compression="fast" />
+  <location shadows="yes">%SystemDrive%\</location>
+  <!-- Destiné à la collecte de full dumps au coup par coup. Une entrée similaire est présente dans GetErrors pour la collecte des dumps partiels -->
+  <!-- En mode offline pas de limite -->
+  <samples MaxPerSampleBytes="100GB" MaxTotalBytes="150GB">
+    <sample name="memory_dump">
+      <ntfs_find name_match="*memory.dmp" />
+    </sample>
+  </samples>
+</getthis>

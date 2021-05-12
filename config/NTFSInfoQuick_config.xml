@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<ntfsinfo walker="MFT" resurrect="yes">
+  <location shadows="yes">*</location>
+  <columns>
+    <default>Default,EASize</default>
+  </columns>
+</ntfsinfo>

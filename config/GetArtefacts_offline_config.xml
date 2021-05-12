@@ -1,12 +1,21 @@
 <?xml version="1.0"?>
-
-<getthis reportall="">
+<getthis reportall="" nolimits="">
   <output compression="fast" />
-  <location shadows="yes">*</location>
-  <samples MaxTotalBytes="1GB" MaxSampleCount="200000" MaxPerSampleBytes="650MB" >
+  <location>%OfflineLocation%</location>
+  <samples>
 
     <sample name="ActivityTimeline" MaxPerSampleBytes="120MB">
         <ntfs_find name="ActivitiesCache.db" />
+    </sample>
+
+    <sample name="recentFile" MaxPerSampleBytes="120MB">
+        <ntfs_find name="RecentFileCache.bcf" />
+        <ntfs_find path_match="\Users\*\AppData\Roaming\Microsoft\Windows\Recent\*Destinations-ms" />
+    </sample>
+
+    <sample name="Prefetch" MaxPerSampleBytes="20MB">
+        <ntfs_find path_match="\Windows\Prefetch\*.pf" />
+        <ntfs_find path_match="\Windows\Prefetch\layout.ini" />
     </sample>
 
     <sample name="SuperFetch" MaxPerSampleBytes="50MB">
@@ -47,7 +56,7 @@
         <ntfs_find path_match="\Windows\system32\wbem\Repository\*.BTR" />
     </sample>
 
-    <sample name="RDP_bmc" MaxPerSampleBytes="200MB" MaxTotalBytes="600MB">
+    <sample name="RDP_bmc" MaxPerSampleBytes="200MB" MaxTotalBytes="1GB">
         <ntfs_find path_match="\Documents and Settings\*\Local Settings\Application Data\Microsoft\Terminal Server Client\Cache\*.bmc" />
         <ntfs_find path_match="\Documents and Settings\*\Local Settings\Application Data\Microsoft\Terminal Server Client\Cache\*.bin" />
 	<ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Terminal Server Client\Cache\*.bmc" />
@@ -68,7 +77,7 @@
         <ntfs_find path_match="\Windows\System32\sru\*" />
     </sample>
 
-    <sample name="plist" MaxTotalBytes="50MB">
+    <sample name="plist" MaxPerSampleBytes="2MB" MaxTotalBytes="50MB">
         <ntfs_find name_match="*.plist" />
     </sample>
 
@@ -77,7 +86,7 @@
         <ntfs_find path_match="\windows\Apppatch\*.sdb" />
     </sample>
 
-    <sample name="special_accounts" MaxTotalBytes="200MB">
+    <sample name="special_accounts" >
         <ntfs_find path_match="\windows\system32\config\systemprofile\*" />
         <ntfs_find path_match="\windows\syswow64\config\systemprofile\*" />
         <ntfs_find path_match="\windows\ServiceProfiles\LocalService\*" />
@@ -86,19 +95,8 @@
         <ntfs_exclude name="usrclass.dat" />
     </sample>
 
-    <sample name="exchange_transport_agent" MaxTotalBytes="50MB">
+    <sample name="exchange_transport_agent">
         <ntfs_find name="agents.config" />
-    </sample>
-
-    <sample name="Prefetch" MaxPerSampleBytes="20MB">
-        <ntfs_find path_match="\Windows\Prefetch\*.pf" />
-        <ntfs_find path_match="\Windows\Prefetch\layout.ini" />
-    </sample>
-
-    <sample name="recentFile" MaxPerSampleBytes="120MB">
-        <ntfs_find name="RecentFileCache.bcf" />
-        <ntfs_find path_match="\Windows\AppCompat\Programs\AEINV_*.xml" />
-        <ntfs_find path_match="\Users\*\AppData\Roaming\Microsoft\Windows\Recent\*Destinations-ms" />
     </sample>
 
   </samples>

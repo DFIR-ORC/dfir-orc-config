@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<getthis reportall="" nolimits="">
+  <location>%OfflineLocation%</location>
+  <samples> 
+    <sample>
+      <ntfs_find name="$Secure" ads="$SDS" />
+      <ntfs_find attr_name="$SII" attr_type="$INDEX_ALLOCATION"/>
+    </sample>
+  </samples>
+</getthis>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<getthis reportall="" flushregistry="yes">
-  <location>%SystemDrive%</location>
-  <samples MaxPerSampleBytes="500MB" MaxTotalBytes="2048MB">
+<getthis reportall="" nolimits="" >
+  <location>%OfflineLocation%</location>
+  <samples> <!-- MaxPerSampleBytes="300MB" MaxSampleCount="100" MaxTotalBytes="1024MB"> -->
     <sample>
       <ntfs_find name="SECURITY" header="regf" />
     </sample>

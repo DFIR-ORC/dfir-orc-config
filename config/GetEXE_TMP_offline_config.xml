@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<getthis reportall="" nolimits="">
+  <location>%OfflineLocation%</location>
+  <output password="avproof" />
+  <samples> <!-- MaxPerSampleBytes="10MB" MaxSampleCount="512" MaxTotalBytes="200MB"> -->
+    <sample name="EXE_TMP">
+      <ntfs_exclude path_match="*\WorkingTemp\*" />
+      <ntfs_find path_match="\Documents And Settings\*\Local Settings\Temp\*" header="MZ" />
+      <ntfs_find path_match="\Users\*\AppData\*" header="MZ" />
+      <ntfs_find path_match="\Documents And Settings\*\Application Data\*" header="MZ" />
+      <ntfs_find path_match="\RECYCLER\*" header="MZ" />
+	  <ntfs_find path_match="\$Recycle.bin\*" header="MZ" />	  
+	  <ntfs_find path_match="\Windows\Temp\*" header="MZ" />	
+	  <ntfs_find path_match="\Temp\*" header="MZ" />	  	  
+	  <ntfs_find path_match="\System Volume Information\*" header="MZ" />	  	  
+    </sample>
+  </samples>
+</getthis>

@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<getthis reportall="">
+  <output compression="fast" />
+  <location>*</location>
+  <samples MaxPerSampleBytes="128MB" MaxTotalBytes="512MB" MaxSampleCount="200000">
+    <!-- Fichier de configuration pour la récupération de l'historique de navigation, de téléchargement et les cookies -->
+    <sample name="Firefox_XP_History">
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\places.sqlite*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\downloads.sqlite*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Mozilla\Firefox\Profiles\*\cookies.sqlite*"/>
+    </sample>
+
+    <sample name="Firefox_Vista_History">
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\places.sqlite*"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\downloads.sqlite*"/>
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Mozilla\Firefox\Profiles\*\cookies.sqlite*"/>
+    </sample>
+
+    <sample name="Chrome_XP_History">
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\History*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Cookies*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Google\Chrome\User Data\Default\Archived History*"/>
+    </sample>
+
+    <sample name="Chrome_Vista_History"> <!-- L'étoile après Chrome c'est pour inclure Canary -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\History*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Archived History*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Google\Chrome*\User Data\Default\Cookies*"/>
+    </sample>
+
+    <sample name="Safari_XP_History">
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Apple Computer\Safari\History.plist*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Apple Computer\Safari\Downloads.plist*"/>
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Apple Computer\Safari\Cookies.*"/>
+    </sample>
+
+    <sample name="Safari_Vista_History">
+      <ntfs_find path_match="\Users\*\AppData\*\Apple Computer\Safari\History.plist*"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Apple Computer\Safari\Downloads.plist*"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Apple Computer\Safari\Cookies.*"/>
+    </sample>
+
+    <sample name="IE_XP_History">
+      <!-- IE sous XP -->
+      <ntfs_find path_match="\Documents and Settings\*\Local Settings\History\History.ie5\*.dat"/>
+      <ntfs_find path_match="\Documents and Settings\*\Cookies\*"/>
+    </sample>
+
+    <sample name="IE_Vista_History">
+      <!-- IE 7-9 sous Vista+ -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\*\History.ie5\*\*.dat"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Cookies\*"/>
+      <!-- IE 8-9 sous Vista et 7 -->
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Microsoft\Windows\IEDownloadHistory\index.dat"/>
+      <!-- IE 10 sous 7 SP1 et 8 -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\WebCache\*.dat"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\WebCache\*.log"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\WebCache\*.jrs"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\WebCache\*.chk"/>
+      <!-- IE 11 sous 7,8.1 et 10 -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\INetCookies\*"/>
+    </sample>
+
+    <sample name="Edge_Spartan_History">
+      <ntfs_find path_match="\Users\*\AppData\*\Microsoft\Windows\WebCache\*.dat"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Microsoft\Windows\WebCache\*.log"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Microsoft\Windows\WebCache\*.jrs"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Microsoft\Windows\WebCache\*.jfm"/>
+      <ntfs_find path_match="\Users\*\AppData\*\Microsoft\Windows\WebCache\*.chk"/>
+    </sample>
+
+    <sample name="Edge_Anhaeim_History">
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\History*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Archived History*"/>
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Edge\User Data\Default\Cookies*"/>
+    </sample>
+    
+    <sample name="Flash_Player_History">
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Macromedia\FlashPlayer\#SharedObjects\*.sol"/>
+    </sample>
+
+  </samples>
+</getthis>
+

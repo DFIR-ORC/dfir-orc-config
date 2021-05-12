@@ -1,27 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <toolembed>
-    <input>.\tools\DFIR-Orc_x86.exe</input>
-    <output>.\output\%ORC_OUTPUT%</output>
+	<input>.\tools\DFIR-Orc_x86.exe</input>
+	<output>.\output\%ORC_OUTPUT%</output>
 
-    <run64 args="WolfLauncher">7z:#Tools|DFIR-Orc_x64.exe</run64>
-    <run32 args="WolfLauncher">self:#</run32>
+	<run64 args="WolfLauncher" >7z:#Tools|DFIR-Orc_x64.exe</run64>
+	<run32 args="WolfLauncher" >self:#</run32>
 
-    <file name="WOLFLAUNCHER_CONFIG" path=".\%ORC_CONFIG_FOLDER%\DFIR-ORC_config.xml"/>
+	<file name="WOLFLAUNCHER_CONFIG" path=".\%ORC_CONFIG_FOLDER%\DFIR-ORC_config.xml"/>
 
-    <file name="GetSystemHives_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetSystemHives_config.xml"/>
-    <file name="GetUserHives_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetUserHives_config.xml"/>
-    <file name="GetSamHive_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetSamHive_config.xml"/>
-    <file name="GetEvents_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetEvents_config.xml"/>
-    <file name="NTFSInfo_config.xml" path=".\%ORC_CONFIG_FOLDER%\NTFSInfo_config.xml"/>
-    <file name="NTFSInfoHashPE_config.xml" path=".\%ORC_CONFIG_FOLDER%\NTFSInfoHashPE_config.xml"/>
-    <file name="FatInfo_config.xml" path=".\%ORC_CONFIG_FOLDER%\FatInfo_config.xml"/>
-    <file name="FatInfoHashPE_config.xml" path=".\%ORC_CONFIG_FOLDER%\FatInfoHashPE_config.xml"/>
-    <file name="GetArtefacts_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetArtefacts_config.xml"/>
-    <file name="GetYaraSamples_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetYaraSamples_config.xml"/>
-    <file name="ruleset.yara" path=".\%ORC_CONFIG_FOLDER%\ruleset.yara"/>
+	<file name="GetADS_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetADS_config.xml"/>
+	<file name="GetArtefacts_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetArtefacts_config.xml"/>
+	<file name="GetExtAttrs_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetExtAttrs_config.xml"/>
+	<file name="GetTextLogs_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetTextLogs_config.xml"/>
+	<file name="GetSDS_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetSDS_config.xml"/>
+	<file name="GetCatRoot_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetCatRoot_config.xml"/>
+	<file name="GetEVT_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetEVT_config.xml"/>
+	<file name="GetExeTMP_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetExeTMP_config.xml"/>
+	<file name="GetBrowsersHistory_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetBrowsersHistory_config.xml"/>
+	<file name="GetBrowsersArtefacts_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetBrowsersArtefacts_config.xml"/>
+	<file name="GetScript_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetScript_config.xml"/>
+	<file name="GetErrors_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetErrors_config.xml"/>
+	<file name="GetSamples_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetSamples_config.xml" />
+	<file name="GetSystemHives_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetSystemHives_config.xml"/>
+	<file name="GetUserHives_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetUserHives_config.xml"/>
+	<file name="GetSamHive_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetSamHive_config.xml"/>
+	<file name="GetYaraSamples_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetYaraSamples_config.xml"/>
+	<file name="NTFSInfoQuick_config.xml" path=".\%ORC_CONFIG_FOLDER%\NTFSInfoQuick_config.xml"/>
+	<file name="NTFSInfoDetail_systemdrive_config.xml" path=".\%ORC_CONFIG_FOLDER%\NTFSInfoDetail_systemdrive_config.xml"/>
+	<file name="NTFSInfoDetail_alldrives_config.xml" path=".\%ORC_CONFIG_FOLDER%\NTFSInfoDetail_alldrives_config.xml"/>
+	<file name="GetFuzzyHash_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetFuzzyHash_config.xml"/>
+	<file name="FatInfoDetail_config.xml" path=".\%ORC_CONFIG_FOLDER%\FatInfoDetail_config.xml"/>
+	<file name="FatInfoHashPE_config.xml" path=".\%ORC_CONFIG_FOLDER%\FatInfoHashPE_config.xml"/>
+	<file name="FatInfoFirstBytes_config.xml" path=".\%ORC_CONFIG_FOLDER%\FatInfoFirstBytes_config.xml"/>
+	<file name="GetMemDmp_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetMemDmp_config.xml"/>
+	<file name="GetResidents_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetResidents_config.xml"/>
 
-    <archive name="Tools" format="7z" compression="Ultra">
-        <file name="DFIR-Orc_x64.exe" path=".\tools\DFIR-Orc_x64.exe"/>
-        <file name="autorunsc.exe" path=".\tools\autorunsc.exe"/>
-    </archive>
+	<file name="GetADS_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetADS_offline_config.xml"/>
+	<file name="GetArtefacts_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetArtefacts_offline_config.xml"/>
+	<file name="GetExtAttrs_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetExtAttrs_offline_config.xml"/>
+	<file name="GetTextLogs_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetTextLogs_offline_config.xml"/>
+	<file name="GetHives_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetHives_offline_config.xml"/>
+	<file name="GetSDS_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetSDS_offline_config.xml"/>
+	<file name="GetCatRoot_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetCatRoot_offline_config.xml"/>
+	<file name="GetScript_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetScript_offline_config.xml"/>
+	<file name="GetErrors_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetErrors_offline_config.xml"/>
+	<file name="GetMemDmp_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetMemDmp_offline_config.xml"/>
+	<file name="GetEVT_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetEVT_offline_config.xml"/>
+	<file name="GetUserHives_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetUserHives_offline_config.xml"/>
+	<file name="GetEXE_TMP_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetEXE_TMP_offline_config.xml"/>
+	<file name="GetBrowsersComplet_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetBrowsersComplet_offline_config.xml"/>
+	<!-- <file name="GetYaraSamples_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetYaraSamples_offline_config.xml"/> -->
+	<file name="GetFuzzyHash_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetFuzzyHash_offline_config.xml"/>
+	<file name="NTFSInfo_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\NTFSInfo_offline_config.xml"/>
+	<file name="GetSAM_hive_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetSAM_hive_offline_config.xml"/>
+	<file name="FatInfo_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\FatInfo_offline_config.xml"/>
+	<file name="GetResidents_offline_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetResidents_offline_config.xml"/>
+
+	<file name="NTFSInfo_little_config.xml" path=".\%ORC_CONFIG_FOLDER%\NTFSInfo_little_config.xml" />
+	<file name="GetEVT_little_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetEVT_little_config.xml" />
+	<file name="GetSystemHives_little_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetSystemHives_little_config.xml" />
+	<file name="GetArtefacts_little_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetArtefacts_little_config.xml" />
+	<file name="GetScript_little_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetScript_little_config.xml" />
+
+	<file name="FastFind_config.xml" path=".\%ORC_CONFIG_FOLDER%\FastFind_config.xml" />
+
+	<file name="GetMFT_config.xml" path=".\%ORC_CONFIG_FOLDER%\GetMFT_config.xml" />
+
+	<file name="yara_rules" path=".\%ORC_CONFIG_FOLDER%\ruleset.yara" />
+
+	<pair name="AUTORUNS"  value="7z:#Tools|autorunsc.exe" />
+
+        <archive name="Tools" format="7z" compression="Ultra">
+		<file name="DFIR-Orc_x64.exe" path=".\tools\DFIR-Orc_x64.exe"/>
+
+		<file name="handle.exe" path=".\tools\handle.exe"/>
+		<file name="autorunsc.exe" path=".\tools\autorunsc.exe"/>
+		<file name="Tcpvcon.exe" path=".\tools\Tcpvcon.exe"/>
+		<file name="PsService.exe" path=".\tools\PsService.exe"/>
+		<file name="Listdlls.exe" path=".\tools\Listdlls.exe"/>
+
+		<file name="dumpit" path=".\tools\DumpIt.exe" />
+		<file name="winpmem" path=".\tools\winpmem.exe" />
+
+	</archive>
 </toolembed>

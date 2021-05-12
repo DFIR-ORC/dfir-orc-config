@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<getthis reportall="">
+  <location>%OfflineLocation%</location>
+  <samples MaxSampleCount="0">
+    <sample name="FuzzyHash">
+      <ntfs_exclude path_match="*\WorkingTemp\*" />
+      <ntfs_find path_match="\Documents And Settings\*\Local Settings\Temp\*" />
+      <ntfs_find path_match="\Users\*\AppData\*" />
+      <ntfs_find path_match="\Documents And Settings\*\Application Data\*" />
+      <ntfs_find path_match="\RECYCLER\*" />
+      <ntfs_find path_match="\$Recycle.bin\*" />
+      <ntfs_find path_match="\Windows\Temp\*" />
+      <ntfs_find path_match="\Temp\*" />
+      <ntfs_find path_match="\System Volume Information\*" />
+    </sample>
+  </samples>
+</getthis> 

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ntfsinfo walker="MFT" resurrect="yes" >
+  <fileinfo compression="fast"/>
+  <location>%OfflineLocation%</location>
+  <columns>
+    <default>ComputerName,VolumeID,Default,ExtendedAttribute,RecordInUse,SecDescrID,ADS,FirstBytes</default>
+    <default>Details</default>
+    <omit SizeGT="100M">MD5,SHA1,SHA256,PeMD5,PeSHA1,PeSHA256,Authenticode</omit>
+    <add HasPE="">MD5,SHA1,SHA256,PeMD5,PeSHA1,PeSHA256,Authenticode</add>
+  </columns>
+</ntfsinfo>

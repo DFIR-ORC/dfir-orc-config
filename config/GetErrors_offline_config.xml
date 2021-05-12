@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<getthis reportall="" nolimits="">
+  <location>%OfflineLocation%</location>
+  <samples> <!-- MaxPerSampleBytes="5MB" MaxSampleCount="1024" MaxTotalBytes="150GB"> -->
+    <sample name="minidump">
+      <ntfs_find path_match="\Windows\Minidump\*"/>
+      <ntfs_find name_match="*.mdmp"/>
+    </sample>
+    <sample name="WER">
+      <ntfs_find name_match="*.wer"/>
+	  <ntfs_find name_match="WER*.sysdata.xml"/>
+    </sample>
+    <sample name="Drwtsn">
+      <ntfs_find name="Drwtsn32.log"/>
+    </sample>
+  </samples>
+</getthis>

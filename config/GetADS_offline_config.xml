@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<getthis reportall="" nolimits="">
+  <location>%OfflineLocation%</location>
+  <samples>
+    <sample name="ads">
+      <ntfs_find ads_match="?*" /> 
+      <ntfs_exclude path="\$UpCase" ads="$Info" />
+      <ntfs_exclude path="\$BadClus" ads="$Bad" />
+      <ntfs_exclude path="\$Extend\$RmMetadata\$Repair" ads="$Corrupt" />
+      <ntfs_exclude path="\$Extend\$RmMetadata\$Repair" ads="$Verify" />
+      <ntfs_exclude path="\$Secure" ads="$SDS" />
+      <ntfs_exclude path="\$Extend\$RmMetadata\$TxfLog\$Tops" ads="$T" />
+      <ntfs_exclude path="\$Extend\$UsnJrnl" ads="$J" />  
+    </sample>
+  </samples>
+</getthis>

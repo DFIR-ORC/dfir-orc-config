@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<getsamples>
+    <getthis name="getthis.exe" run="self:#" args="getthis" />
+    <output password="avproof" />
+    <samples MaxPerSampleBytes="16MB" MaxTotalBytes="512MB" MaxSampleCount="200000"/>
+</getsamples>

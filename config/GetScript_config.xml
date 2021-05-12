@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<getthis reportall="">
+  <location>*</location>
+  <output password="avproof"/>
+  
+  <samples MaxPerSampleBytes="512KB" MaxTotalBytes="150MB" MaxSampleCount="200000">
+    <sample name="job">
+        <ntfs_find name_match="*.job" />
+    </sample>   
+    <sample name="job_xml">
+        <ntfs_find path_match="\Windows\Tasks\*"  />
+        <ntfs_find path_match="\Windows\System32\Tasks\*" />
+    </sample>
+    <sample name="ps_jobs">
+        <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\PowerShell\ScheduledJobs\*"/>
+    </sample>
+    <sample name="py">
+        <ntfs_find name_match="*.py" />
+        <ntfs_find name_match="*.pyc" />
+    </sample>
+	<sample name="lua">
+        <ntfs_find name_match="*.lua" />
+    </sample>
+    <sample name="kixtart">
+        <ntfs_find name_match="*.kix" />
+    </sample>
+  </samples>
+</getthis>

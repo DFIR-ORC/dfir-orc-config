@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<getthis reportall="">
+  <output compression="fast" />
+  <location>*</location>
+  <samples MaxTotalBytes="200MB" MaxSampleCount="100000" MaxPerSampleBytes="1KB"  >
+
+  <sample name="fichiers_residents" >
+        <ntfs_find size_le="750" size_gt="0" />
+    </sample>
+
+   </samples>
+</getthis>

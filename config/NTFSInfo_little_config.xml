@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<ntfsinfo walker="MFT">
+    <fileinfo compression="ultra" />
+    <location>%SystemDrive%</location>
+    <columns>
+        <!--
+Contains:
+* **Standard Information:**
+    * **File:** Name of the file
+    * **ParentName:** Name of the parent folder
+    * **SizeInBytes:** File size in bytes
+* **Date Information:**
+    * **CreationDate:** File creation date *"mm/dd/yyyy hh\:mm\:ss.000"*
+    * **LastModificationDate:** File last write date *"mm/dd/yyyy hh\:mm\:ss.000"*
+    * **LastAccessDate:** File last read access date
+    * **LastAttrChangeDate:** Last Attribute change date (MFT information changed) *"mm/dd/yyyy hh\:mm\:ss.000"*
+    * **FileNameCreationDate:** File name (hard link) creation date
+    * **FileNameLastAccessDate:** File name (hard link) access date
+    * **FileNameLastDataModificationDate:** File name (hard link) last date *data* was modified
+    * **FileNameLastAttrModificationDate:** File name (hard link) last date MFT *attribute* was modified
+* **PE Header related information:**
+    * **Platform:** PE Header platform
+    * **TimeStamp:** PE Header timestamp
+    * **SubSystem:** PE Header SubSystem
+* **Version Information:**
+    * **FileOS:** VersionInfo OS tag
+    * **FileType:** VersionInfo type
+    * **Version:** VersionInfo file version
+    * **CompanyName:** VersionInfo company name
+    * **ProductName:** VersionInfo product name
+    * **OriginalFileName:** VersionInfo original file name
+* **Cryptographic/Authenticode Information:**
+    * **SHA1:** Cryptographic SHA1 hash (in hex)
+    * **AuthenticodeStatus:** Status of the authenticode signature for the file. Possible values are:
+        * **Unknown:** Status failed to be determined
+        * **Empty string:** File is not a PE
+        * **SignedVerified:** File is signed and the signature verified
+        * **CatalogSignedVerified:** File hash is listed in a catalog
+        * **SignedNotVerified:** File signature does _not_ verify
+        * **NotSigned:** No signature or catalog could be found for this file
+    * **AuthenticodeSignerThumbprint:** Signer's certificate hash
+    * **AuthenticodeCAThumbprint:** Signer's root CA certificate hash
+* **Alternate Storage areas:**
+    * **ADS:** Alternate Data Stream Information
+* **RecordInUse:** Boolean which indicates if this record was in use or free (i.e. deleted)
+
+Missing:
+* **Volume Identification:**
+    * **ComputerName:** Name of the computer
+    * **VolumeID:** Id of the volume
+* **Standard Information:**
+    * **FullName:** Full-path name
+    * **Extension:** Optional file name extension (split path)
+    * **Attributes:** FAT file system attributes
+* **FirstBytes:** First 16 bytes (in hex) of the ``$DATA`` attribute content.
+* **Security:**
+    * **OwnerSID:** SID of the owner for this entry
+    * **Owner:** Name of the owner for this entry
+    * **SecDescrID** ID of security descriptor for the file
+* **ShortName:**
+    * **Short Name** (8.3) if any
+* **Cryptographic/Authenticode Information:**
+    * **MD5:** Cryptographic MD5 hash (in hex)
+    * **SHA256:** Cryptographic SHA256 hash (in hex)
+    * **PeMD5:** Authenticode (PE) file MD5 hash
+    * **PeSHA1:** Authenticode (PE) file SHA1 hash
+    * **PeSHA256:** Authenticode (PE) file SHA256 hash
+    * **AuthenticodeSigner:** Signer's certificate (value of the first occurrence of the attributes szOID_COMMON_NAME, szOID_ORGANIZATIONAL_UNIT_NAME, szOID_ORGANIZATION_NAME, or szOID_RSA_emailAddr)
+    * **AuthenticodeCA:** Signer's root CA certificate (value of the first occurrence of the attributes szOID_COMMON_NAME, szOID_ORGANIZATIONAL_UNIT_NAME, szOID_ORGANIZATION_NAME, or szOID_RSA_emailAddr)
+    * **SecurityDirectory** Base64 encoded security directory of the PE file (if present)
+* **Alternate Storage areas:**
+    * **ExtendedAttribute:** Colon separated names of the extended attributes (``$EA`` attribute content)
+* **Reference Numbers**
+    * **USN:** Update Sequence Number (last USN added in the journal for this entry)
+    * **FRN:** File Reference Number (version index of the entry in the MFT)
+    * **ParentFRN:** Parent Folder Reference Number
+* **FilenameFlags:** Type of file name (POSIX=0,WIN32=1,DOS83=2)
+* **FilenameID:** Attribute ID for this ``$FILE_NAME``
+* **DataID:** Attribute ID for this ``$DATA``
+* **Status:** File lock status (per CreateFile return value, if available)
+* **OwnerID:** Owner ID for this entry (ID for quotas, not security)
+* **FilenameIndex:** Index of this ``$FILE_NAME`` in this record
+* **DataIndex:** Index of this ``$DATA`` in this record
+* **SnapshotID:** Snapshot associated with this entry
+* **SSDeep:** Fuzzyhash SSDeep
+* **TLSH:** Trend Micro's TLSH
+* **SignedHash:** Signed hash inside the security directory of the PE
+ -->
+        <default>File,ParentName,SizeInBytes,CreationDate,LastModificationDate,LastAccessDate,LastAttrChangeDate,FileNameCreationDate,FileNameLastModificationDate,FileNameLastAccessDate,FileNameLastAttrModificationDate,ADS,RecordInUse</default>
+        <omit SizeGT="10M">SHA1</omit>
+        <add HasPE="">SHA1,Details,AuthenticodeStatus,AuthenticodeSignerThumbprint,AuthenticodeCAThumbprint</add>
+    </columns>
+</ntfsinfo>

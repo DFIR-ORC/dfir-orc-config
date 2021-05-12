@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<getthis reportall="" flushregistry="yes">
-  <location>*</location>
-  <samples MaxPerSampleBytes="500MB" MaxTotalBytes="2048MB">
+<getthis reportall="" nolimits="" >
+  <location>%OfflineLocation%</location>
+  <samples> 
     <sample>
       <ntfs_find name="ntuser.dat" header="regf" />
       <ntfs_find name="UsrClass.dat" header="regf" />

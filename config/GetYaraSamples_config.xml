@@ -1,12 +1,39 @@
 <?xml version="1.0"?>
+
 <getthis reportall="">
-    <output compression="fast"/>
-    <location>%SystemDrive%</location>
-    <yara block="20M" overlap="2M" timeout="20" source="res:#ruleset.yara"/>
+
+    <output compression="fast" />
+
+    <location>C:\</location>
+
+    <yara block="20M" overlap="2M" timeout="20" source="res:#yara_rules" />
 
     <samples MaxSampleCount="2000" MaxTotalBytes="500MB">
-        <sample name="size_lower_8M" MaxPerSampleBytes="8MB">
-            <ntfs_find size_le="8M" yara_rule="*"/>
+        <!--
+            Generic catch-all ntfs_find rule to collect any sample that had a "reliable" match (ie. samples that fit into the default 20M buffer)
+            This rule should be disabled in favor of the specifc rules below when proper tagging and triaging of Yara rules is done
+        -->
+        <sample name="size_lower_5M" MaxPerSampleBytes="5MB">
+            <ntfs_find size_le="5M" yara_rule="*" />
         </sample>
+
+        <!--
+            Specific rules, disabled while specific yara rulesets are not available
+        -->
+        <!-- Specific ntfs_find rule to apply some yara rules only on PE files (these rules should be prefixed with "rule_pe_" -->
+        <!--
+        <sample name="pefile" MaxPerSampleBytes="20MB">
+            <ntfs_find header="MZ" size_le="20M" yara_rule="rule_pe_*" />
+        </sample>
+        -->
+        <!-- Specific ntfs_find rule to search patterns in memory (ie. in pagefile.sys), but do not collect the pagefile -->
+        <!--
+        <sample name="pagefile" MaxPerSampleBytes="0MB">
+            <ntfs_find name="pagefile.sys" yara_rule="rule_memory_*" />
+        </sample>
+        -->
+
     </samples>
+
 </getthis>
+

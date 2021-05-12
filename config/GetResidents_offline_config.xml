@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<getthis reportall="" nolimits="">
+  <output compression="fast" />
+  <location>%OfflineLocation%</location>
+  <samples>  
+	<sample name="fichiers_residents">
+        <ntfs_find size_le="750" size_gt="0" />
+    </sample>
+  </samples>
+</getthis>

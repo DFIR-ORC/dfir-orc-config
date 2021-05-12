@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<getthis reportall="" nolimits="" >
+  <output compression="fast" />
+  <location >%OfflineLocation%</location>
+  <samples> <!-- MaxSampleCount="5" MaxPerSampleBytes="100GB" MaxTotalBytes="100GB" > --> 
+    <sample name="memory_dump">
+      <ntfs_find name_match="*memory.dmp"/>
+    </sample>
+  </samples>
+</getthis>
+

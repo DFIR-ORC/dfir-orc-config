@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<getthis reportall="" nolimits="">
+  <location>%OfflineLocation%</location>
+  <output password="avproof"/>
+  <samples> 
+    <sample name="job">
+        <ntfs_find name_match="*.job" />
+    </sample>
+    <sample name="job_xml">
+        <ntfs_find path_match="\Windows\Tasks\*" />
+		<ntfs_find path_match="\Windows\System32\Tasks\*" />
+    </sample>
+    <sample name="vbs_vbe">
+        <ntfs_find name_match="*.vbs" />
+        <ntfs_find name_match="*.vbe" />
+    </sample>
+    <sample name="bat">
+        <ntfs_find name_match="*.bat" />
+    </sample>
+    <sample name="cmd">
+        <ntfs_find name_match="*.cmd" />
+    </sample>
+    <sample name="ps1">
+        <ntfs_find name_match="*.ps1" />
+    </sample>
+	<sample name="py">
+        <ntfs_find name_match="*.py" />
+        <ntfs_find name_match="*.pyc" />
+    </sample>
+	<sample name="lua">
+        <ntfs_find name_match="*.lua" />
+    </sample>
+	<sample name="kixtart">
+        <ntfs_find name_match="*.kix" />
+    </sample>
+	<sample name="excel_macro">
+	<ntfs_find path_match="\Users\*\AppData\Roaming\Microsoft\Excel\XLStart"/>
+	<ntfs_find path_match="\Documents and Settings\*\Application Data\Microsoft\Excel\XLStart"/>
+	<ntfs_find path_match="\Program Files\Microsoft Office\*\XLSTART"/>	
+    </sample>		
+  </samples>
+</getthis>

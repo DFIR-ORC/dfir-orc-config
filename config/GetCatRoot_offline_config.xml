@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<getthis reportall="" nolimits="" >
+  <output compression="fast" /> 
+  <location>%OfflineLocation%</location>
+  <samples> <!-- MaxPerSampleBytes="50MB" MaxSampleCount="15000" MaxTotalBytes="250MB"> -->
+    <sample name="CatRoot">
+      <ntfs_find name_match="*.cat" header_hex="30"/>
+    </sample>
+  </samples>
+</getthis>

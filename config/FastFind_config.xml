@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<fastfind version="FastFind_in_Orc">
+    <filesystem>
+        <location shadows="yes">%SystemDrive%</location>
+    </filesystem>
+</fastfind>

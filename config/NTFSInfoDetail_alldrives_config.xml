@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<ntfsinfo walker="MFT" resurrect="yes">
+  <location>*</location>
+  <columns>
+    <default>Default</default>
+    <omit SizeGT="10M">MD5,SHA1,SHA256,PeMD5,PeSHA1,PeSHA256</omit>
+    <add HasPE="">MD5,SHA1,SHA256,PeMD5,PeSHA1,PeSHA256,Details,Authenticode</add>
+  </columns>
+</ntfsinfo>
+
