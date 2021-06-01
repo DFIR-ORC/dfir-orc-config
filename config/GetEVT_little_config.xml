@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <getthis reportall="" hash="none">
     <!-- <output compression="ultra" /> -->
-    <location>%SystemDrive%\</location>
+    <location>*</location>
     <samples MaxPerSampleBytes="3GB" MaxTotalBytes="25GB" MaxSampleCount="200000">
         <sample name="evtx">
             <!-- Exclude some notoriously big event logs -->
