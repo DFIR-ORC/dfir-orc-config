@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <getthis reportall="">
-  <location>%SystemDrive%\</location>
+  <location>*</location>
   <samples MaxPerSampleBytes="3GB" MaxTotalBytes="25GB" MaxSampleCount="200000">
     <sample name="evtx">
       <ntfs_find name_match="*.evtx" header="ElfFile" />
