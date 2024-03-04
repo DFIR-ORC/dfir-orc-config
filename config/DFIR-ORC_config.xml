@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <wolf childdebug="no" command_timeout="600">
-    <log disposition="truncate">DFIR-ORC_{SystemType}_{FullComputerName}_{TimeStamp}.log</log>
-    <outline disposition="truncate">DFIR-ORC_{SystemType}_{FullComputerName}_{TimeStamp}.json</outline>
+    <log>
+        <console level="critical" backtrace="critical"></console>
+        <file level="info" backtrace="error">
+            <output disposition="truncate">DFIR-ORC_{SystemType}_{FullComputerName}_{TimeStamp}.log</output>
+        </file>
+    </log>
+    <outline disposition="truncate">DFIR-ORC_{SystemType}_{FullComputerName}_{TimeStamp}_Outline.json</outline>
+    <outcome disposition="truncate">DFIR-ORC_{SystemType}_{FullComputerName}_{TimeStamp}_Outcome.json</outcome>
 
     <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Memory.7z" keyword="Memory" concurrency="2" repeat="Once" compression="fast" archive_timeout="120">
         <restrictions ElapsedTimeLimit="360" />
