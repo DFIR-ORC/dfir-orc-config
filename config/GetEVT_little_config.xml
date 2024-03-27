@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <getthis reportall="" hash="none">
     <!-- <output compression="ultra" /> -->
-    <location>%SystemDrive%\</location>
+    <location>*</location>
     <samples MaxPerSampleBytes="3GB" MaxTotalBytes="25GB" MaxSampleCount="200000">
         <sample name="evtx">
             <!-- Exclude some notoriously big event logs -->
@@ -13,12 +13,12 @@
             <ntfs_exclude name_match="microsoft-windows-hcs-*.evtx" />
             <ntfs_exclude name="microsoft office web apps.evtx" />
             <ntfs_exclude name_match="microsoft-team foundation server-*.evtx" />
-            <!-- Target the collection of event logs in the "default" path only. -->
-            <ntfs_find path_match="\Windows\System32\WinEVT\logs\*.evtx" />
+            <!-- Target the collection of event logs with header check. -->
+            <ntfs_find path_match="*.evtx" header="ElfFile"/>
         </sample>
         <sample name="evt">
-            <!-- Target the collection of event logs in the "default" path only. -->
-            <ntfs_find path_match="\Windows\System32\Config\*.evt" header_hex="300000004c664c65" />
+            <!-- Target the collection of event logs with header check. -->
+            <ntfs_find path_match="*.evt" header_hex="300000004c664c65" />
         </sample>
     </samples>
 </getthis>
