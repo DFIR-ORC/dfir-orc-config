@@ -505,6 +505,7 @@
 
         <command keyword="GetLegacyBootCode_offline">
             <execute name="Orc.exe" run="self:#GetSectors" />
+            <argument>/disk=%OfflineLocation%</argument>
             <output  name="BootCode.7z" source="File" argument="/LegacyBootCode /SlackSpace /Out={FileName}" />
             <output  name="BootCode.log" source="StdOutErr" />
         </command>
@@ -513,6 +514,7 @@
 
         <command keyword="GetUefiFull_offline">
             <execute name="Orc.exe" run="self:#GetSectors" />
+            <argument>/disk=%OfflineLocation%</argument>
             <output  name="UefiFull.7z" source="File" argument="/UefiFull /Out={FileName}" />
             <output  name="UefiFull.log" source="StdOutErr" />
         </command>
