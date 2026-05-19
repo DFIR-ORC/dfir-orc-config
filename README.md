@@ -7,8 +7,7 @@ To configure DFIR ORC, you need:
 The configurations given as example here use several Sysinternals tools, DumpIt and WinPmem. You have to download and copy them in the "tools" directory.
 
 The "tools" directory must therefore contain the following files:
-* DFIR-Orc_x64.exe
-* DFIR-Orc_x86.exe
+* DFIR-ORC.exe
 * autorunsc.exe
 * handle.exe
 * Tcpvcon.exe
@@ -32,7 +31,7 @@ Using DFIR ORC with the configurations provided here can entail the presence of 
 These configurations are provided as examples, and must be adapted to each concrete use case. This can be done by modifying the configurations themselves (see tutorial : https://dfir-orc.github.io/tuto.html), or by activation and deactivation of parts of the archive computation, or even computation of whole archives (see option /key in https://dfir-orc.github.io/cli-options.html).
 
 
-## License 
+## License
 
 
 The contents of this repository is available under [open licence 2.0](open-licence.md).

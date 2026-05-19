@@ -10,31 +10,6 @@
     <outline disposition="truncate">DFIR-ORC_{SystemType}_{FullComputerName}_{TimeStamp}_Outline.json</outline>
     <outcome disposition="truncate">DFIR-ORC_{SystemType}_{FullComputerName}_{TimeStamp}_Outcome.json</outcome>
 
-    <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Memory.7z" keyword="Memory" concurrency="2" repeat="Once" compression="fast" archive_timeout="120">
-        <restrictions ElapsedTimeLimit="360" />
-
-        <command keyword="GetRam_dmp" optional="yes" >
-            <execute name="dumpit" run="7z:#Tools|dumpit" />
-            <argument>/q /n /u</argument>
-            <output name="Dump_dumpit_{SystemType}_{FullComputerName}.dmp" source="File" argument="/o {FileName}" />
-            <output name="Dump_dumpit_{SystemType}_{FullComputerName}.log" source="StdOutErr" />
-        </command>
-
-        <command keyword="GetRam_aff4" optional="yes" >
-            <execute name="winpmem" run="7z:#Tools|winpmem" />
-            <argument>--truncate --compression none -dd --verbose --acquire-memory --format map --volume_format aff4 --output -</argument>
-            <output name="Dump_winpmem_{SystemType}_{FullComputerName}.aff4" source="StdOut" />
-            <output name="Dump_winpmem_{SystemType}_{FullComputerName}.log" source="StdErr" />
-        </command>
-
-        <command keyword="GetRam_raw" optional="yes" >
-            <execute name="winpmem" run="7z:#Tools|winpmem" />
-            <argument>--truncate --compression none -dd --verbose --acquire-memory --volume_format raw --output -</argument>
-            <output name="Dump_winpmem_{SystemType}_{FullComputerName}.ram" source="StdOut" />
-            <output name="Dump_winpmem_{SystemType}_{FullComputerName}.log" source="StdErr" />
-        </command>
-    </archive>
-
     <archive name="DFIR-ORC_{SystemType}_{FullComputerName}_Little.7z" keyword="Little" concurrency="2" repeat="Once" compression="ultra" archive_timeout="120">
         <restrictions ElapsedTimeLimit="480" />
 
