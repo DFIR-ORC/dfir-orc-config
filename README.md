@@ -5,7 +5,7 @@
 To configure DFIR ORC, you need:
 * configuration files in XML format, located in the "config" directory
 * items to embed ~~(especially DFIR-Orc binaries in 32 and 64 bits)~~, stored in the "tools" directory
-* **NEW** - the single `DFIR-Orc.exe` executable, which should also be placed in the "tools" directory
+* **NEW** the single `DFIR-Orc.exe` executable, which should also be placed in the "tools" directory
 
 The configurations given as example here use several Sysinternals tools, DumpIt and WinPmem. You have to download and copy them in the "tools" directory.
 
