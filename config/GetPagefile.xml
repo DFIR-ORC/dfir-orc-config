@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<getthis nolimits="" resurrect="resident">
+  <location>%SystemDrive%</location>
+  <samples>
+    <sample name="pagefile" MaxTotalBytes="16GB">
+      <ntfs_find path="\pagefile.sys" />
+    </sample>
+  </samples>
+</getthis>

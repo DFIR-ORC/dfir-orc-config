@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<fatinfo resurrect="yes">
-    <location>*</location>
-    <columns>
-        <default>ComputerName,VolumeID,Default,RecordInUse,FirstBytes</default> 
-    </columns>
-</fatinfo>

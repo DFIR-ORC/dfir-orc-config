@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<fastfind version="FastFind">
+    <filesystem>
+        <location shadows="yes">%SystemDrive%</location>
+    </filesystem>
+</fastfind>

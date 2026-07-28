@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+<getthis reportall="" resurrect="resident">
+  <location shadows="oldest,mid,newest">*</location>
+  <samples MaxSampleCount="4294967294">
+    <ntfs_exclude path="\$UpCase" ads="$Info" />
+    <ntfs_exclude path="\$Extend\$UsnJrnl" ads="$J" />
+    <ntfs_exclude path="\$BadClus" ads="$Bad" />
+    <ntfs_exclude path="\$Extend\$RmMetadata\$Repair" ads="$Corrupt" />
+    <ntfs_exclude path="\$Extend\$RmMetadata\$Repair" ads="$Verify" />
+    <ntfs_exclude path="\$Extend\$RmMetadata\$TxfLog\$Tops" ads="$T" />
+    <ntfs_exclude path="\$Secure" ads="$SDS" />
+    <ntfs_exclude ads="WofCompressedData" />
+    <ntfs_exclude path_match="*\WorkingTemp\*" />
+    <ntfs_exclude name_match="u_ex*.log" /> <!-- already collected in GetThis_Default -->
+    <ntfs_exclude path_match="*\system32\dhcp\*.log" /> <!-- already collected in GetThis_Default -->
+
+    <sample name="ads" MaxTotalBytes="150MB" MaxSampleCount="200000">
+      <ntfs_find ads_match="?*" size_gt="0" />
+    </sample>
+
+    <sample name="ActivityTimeline" MaxTotalBytes="2GB">
+      <ntfs_find name="ActivitiesCache.db" />
+    </sample>
+
+    <sample name="SuperFetch" MaxTotalBytes="350MB">
+      <ntfs_find path_match="\Windows\Prefetch\Ag*.db" />
+    </sample>
+
+    <sample name="Idx" MaxTotalBytes="100MB">
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\Sun\Java\Deployment\cache\*.idx" />
+      <ntfs_find path_match="\Users\*\AppData\*\Sun\Java\Deployment\cache\*.idx" />
+    </sample>
+
+    <sample name="Sol" MaxTotalBytes="40MB">
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\*SharedObjects\*.sol" />
+      <ntfs_find path_match="\Users\*\AppData\*SharedObjects\*.sol" />
+    </sample>
+
+    <sample name="Swf" MaxTotalBytes="150MB">
+      <ntfs_find path_match="\Documents and Settings\*\Application Data\*.swf" />
+      <ntfs_find path_match="\Users\*\AppData\*.swf" />
+    </sample>
+
+    <sample name="INFO2" MaxTotalBytes="100MB" MaxPerSampleBytes="20MB">
+        <ntfs_find path_match="\Recycler\*\INFO2" />
+    </sample>
+
+    <sample name="IconCache" MaxTotalBytes="150MB" MaxPerSampleBytes="50MB">
+        <ntfs_find path_match="\Users\*\Appdata\Local\IconCache.db" />
+        <ntfs_find path_match="\Documents and Settings\*\Local Settings\Application Data\IconCache.db" />
+    </sample>
+
+    <sample name="RDP_bmc" MaxTotalBytes="1500MB" MaxPerSampleBytes="200MB">
+        <ntfs_find path_match="\Documents and Settings\*\Local Settings\Application Data\Microsoft\Terminal Server Client\Cache\*.bmc" />
+        <ntfs_find path_match="\Documents and Settings\*\Local Settings\Application Data\Microsoft\Terminal Server Client\Cache\*.bin" />
+        <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Terminal Server Client\Cache\*.bmc" />
+        <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Terminal Server Client\Cache\*.bin" />
+    </sample>
+
+    <sample name="BITS_QMGR" MaxTotalBytes="250MB">
+        <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Microsoft\Network\Downloader\qmgr*.dat" />
+        <ntfs_find path_match="\ProgramData\Microsoft\Network\Downloader\qmgr*.dat" />
+        <ntfs_find path="\ProgramData\Microsoft\Network\Downloader\qmgr.db" />
+        <ntfs_find path="\ProgramData\Microsoft\Network\Downloader\qmgr.jfm" />
+        <ntfs_find path="\ProgramData\Microsoft\Network\Downloader\edb.chk" />
+        <ntfs_find path_match="\ProgramData\Microsoft\Network\Downloader\edb*.jrs" />
+        <ntfs_find path_match="\ProgramData\Microsoft\Network\Downloader\edb*.log" />
+    </sample>
+
+    <sample name="plist" MaxTotalBytes="50MB">
+        <ntfs_find name_match="*.plist" />
+    </sample>
+
+    <sample name="ssh" MaxTotalBytes="20 MB">
+        <ntfs_find name_match="sshd_config" />
+        <ntfs_find name_match="known_hosts" />
+        <ntfs_find name_match="administrators_authorized_keys" />
+        <ntfs_find name_match="authorized_keys" />
+        <ntfs_find path_match="\ProgramData\ssh\logs\*" />
+    </sample>
+
+    <sample name="sdb" MaxTotalBytes="500MB">
+        <ntfs_find path="\windows\security\database\secedit.sdb" />
+        <ntfs_find path_match="\windows\Apppatch\*.sdb" />
+    </sample>
+
+    <sample name="exchange_iis" MaxTotalBytes="50MB">
+      <!-- Exchange Transport Agent configuration file -->
+      <ntfs_find name="agents.config" path_match="\*\TransportRoles\Shared\*" />
+      <!-- IIS ISAPI Filter/HTTP Module configuration file (Server level) -->
+      <ntfs_find path="\Windows\System32\inetsrv\config\applicationHost.config" />
+      <!-- IIS ISAPI Filter/HTTP Module configuration file (Site level) -->
+      <ntfs_find name="web.config" />
+    </sample>
+
+    <sample name="outlook" MaxTotalBytes="50MB">
+      <!--  Office Template Macros for Outlook -->
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Microsoft\Outlook\VbaProject.OTM" />
+      <!-- Outlook Forms -->
+      <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Forms\*" />
+    </sample>
+
+    <sample name="library_ms" MaxTotalBytes="25MB">
+        <ntfs_find name_match="*.library-ms" />
+    </sample>
+
+    <sample name="citrix_edgesight" MaxTotalBytes="500MB">
+        <ntfs_find name="RSDATR.FDB" path_match="\*\Citrix\System Monitoring\Data\*" />
+    </sample>
+
+    <sample name="defender_detectionhistory" MaxTotalBytes="500MB">
+        <ntfs_find path_match="\ProgramData\Microsoft\Windows Defender\Scans\History\Service\DetectionHistory\*\*" />
+    </sample>
+
+    <sample name="UAL" MaxTotalBytes="500MB">
+        <ntfs_find path_match="\Windows\System32\LogFiles\Sum\*.mdb" />
+    </sample>
+
+    <sample name="KACE" MaxTotalBytes="500MB">
+        <ntfs_find path_match="*\KACE\ksw_process.db" />
+        <ntfs_find path_match="*\KACE\ksw_timestamp.db" />
+        <ntfs_find path_match="*\KACE\metering_data.txt" />
+    </sample>
+
+    <sample name="PCA" MaxTotalBytes="50MB">
+        <ntfs_find path_match="\Windows\appcompat\pca\*.txt" />
+    </sample>
+
+    <sample name="TCGLogs" MaxTotalBytes="50MB">
+        <ntfs_find path_match="\Windows\Logs\MeasuredBoot\*.log" />
+    </sample>
+
+    <sample name="ADCS" MaxTotalBytes="500MB">
+        <!--
+            Database path can be customized (see values DB*Directory in HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\CertSvc\Configuration)
+            but there is no better pattern to match the database without taking all *.edb files on the system
+        -->
+        <ntfs_find path_match="\Windows\System32\CertLog\*.edb" />
+        <!-- path_match="\Windows\System32\CertLog\*.log" would be interesting as well for database recovery with esentutl.exe but can grow quite large -->
+    </sample>
+
+    <sample name="crashdump" MaxTotalBytes="2GB">
+      <ntfs_find path_match="\Windows\system32\config\systemprofile\AppData\Local\CrashDumps\*" name_regex="(powershell.exe|explorer.exe|lsass.exe|firefox.exe|chrome.exe|iexplore.exe|plugin-container.exe|svchost.exe|acrord32.exe|w3wp.exe|mshta.exe|cmd.exe|winword.exe|outlook.exe|excel.exe|cscript.exe|wscript.exe|wmic.exe|certutil.exe|msbuild.exe|msedge.exe|microsoftedge.exe|microsoftedgecp.exe).*\.dmp" />
+      <ntfs_find path_match="\Windows\SysWOW64\config\systemprofile\AppData\Local\CrashDumps\*" name_regex="(powershell.exe|explorer.exe|lsass.exe|firefox.exe|chrome.exe|iexplore.exe|plugin-container.exe|svchost.exe|acrord32.exe|w3wp.exe|mshta.exe|cmd.exe|winword.exe|outlook.exe|excel.exe|cscript.exe|wscript.exe|wmic.exe|certutil.exe|msbuild.exe|msedge.exe|microsoftedge.exe|microsoftedgecp.exe).*\.dmp" />
+      <ntfs_find path_match="\Windows\ServiceProfiles\LocalService\AppData\Local\CrashDumps\*" name_regex="(powershell.exe|explorer.exe|lsass.exe|firefox.exe|chrome.exe|iexplore.exe|plugin-container.exe|svchost.exe|acrord32.exe|w3wp.exe|mshta.exe|cmd.exe|winword.exe|outlook.exe|excel.exe|cscript.exe|wscript.exe|wmic.exe|certutil.exe|msbuild.exe|msedge.exe|microsoftedge.exe|microsoftedgecp.exe).*\.dmp" />
+      <ntfs_find path_match="\Windows\ServiceProfiles\NetworkService\AppData\Local\CrashDumps\*" name_regex="(powershell.exe|explorer.exe|lsass.exe|firefox.exe|chrome.exe|iexplore.exe|plugin-container.exe|svchost.exe|acrord32.exe|w3wp.exe|mshta.exe|cmd.exe|winword.exe|outlook.exe|excel.exe|cscript.exe|wscript.exe|wmic.exe|certutil.exe|msbuild.exe|msedge.exe|microsoftedge.exe|microsoftedgecp.exe).*\.dmp" />
+      <ntfs_find path_match="\Users\*\AppData\Local\CrashDumps\*" name_regex="(powershell.exe|explorer.exe|lsass.exe|firefox.exe|chrome.exe|iexplore.exe|plugin-container.exe|svchost.exe|acrord32.exe|w3wp.exe|mshta.exe|cmd.exe|winword.exe|outlook.exe|excel.exe|cscript.exe|wscript.exe|wmic.exe|certutil.exe|msbuild.exe|msedge.exe|microsoftedge.exe|microsoftedgecp.exe).*\.dmp" />
+    </sample>
+    <sample name="WER" MaxTotalBytes="100MB">
+      <ntfs_find name_match="*.wer" />
+	  <ntfs_find name_match="WER*.sysdata.xml" />
+    </sample>
+    <sample name="Drwtsn" MaxTotalBytes="400MB">
+      <ntfs_find name="Drwtsn32.log" />
+    </sample>
+
+    <sample name="network" MaxTotalBytes="100MB">
+      <ntfs_find name="pfirewall.log" />
+      <ntfs_find path_match="*\system32\drivers\etc\*" />
+    </sample>
+
+    <!-- Very large logs but very few machines have them, compression level is about 50x -->
+    <sample name="dns" MaxTotalBytes="3GB">
+      <ntfs_find path_match="*\system32\dns\*.log" size_gt="0" />
+    </sample>
+
+    <sample name="divers" MaxTotalBytes="200MB">
+      <ntfs_find name="SchedLgU.txt" />
+      <ntfs_find name_match="setupapi*.log" />
+      <ntfs_find name="mrt.log" />
+      <ntfs_find name="userenv.log" />
+      <ntfs_find name="userenv.bak" />
+    </sample>
+
+    <sample name="AV_log" MaxTotalBytes="200MB">
+      <!-- Avast https://forum.avast.com/index.php?topic=212738.0 -->
+      <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Avast Software\Avast\Log\*" />
+      <ntfs_find path_match="\ProgramData\Avast Software\Avast\Log\*" />
+      <ntfs_find path_match="\Users\*\Avast Software\Avast\Log\*" />
+      <!-- Avira https://support.avira.com/hc/en/community/posts/360006303377-How-To-Check-My-Scan-Logs -->
+      <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Avira\Antivirus\LOGFILES\*" />
+      <ntfs_find path_match="\ProgramData\Avira\Antivirus\LOGFILES\*" />
+      <!-- BitDefender https://www.bitdefender.com/consumer/support/answer/1477/ -->
+      <ntfs_find path_match="\Documents and Settings\All Users\Application Data\BitDefender\Desktop\Profiles\Logs\*.xml" />
+      <ntfs_find path_match="\ProgramData\BitDefender\Desktop\Profiles\Logs\*.xml" />
+      <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Bitdefender\Endpoint Security\Logs\*" />
+      <ntfs_find path_match="\ProgramData\Bitdefender\Endpoint Security\Logs\*" />
+      <!-- Ivanti/Bitdefender https://forums.ivanti.com/s/question/0D51B00005TOuJcSAL/bitdefender-logs -->
+      <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Ivanti\Endpoint\Logs\*" />
+      <ntfs_find path_match="\ProgramData\Ivanti\Endpoint\Logs\*" />
+      <!-- ESET https://github.com/laciKE/EsetLogParser -->
+      <ntfs_find path_match="\Documents and Settings\All Users\Application Data\ESET\*\Logs\virlog.dat" />
+      <ntfs_find path_match="\ProgramData\ESET\*\Logs\virlog.dat" />
+      <!-- F-Secure (old ?) https://community.f-secure.com/en/discussion/107401/no-log-file -->
+      <ntfs_find path_match="\Program Files*\F-Secure\Common\Logfile.log" />
+      <ntfs_find path_match="\Documents and Settings\All Users\Application Data\F-Secure\Log\*" />
+      <ntfs_find path_match="\ProgramData\F-Secure\Log\*" />
+      <ntfs_find path_match="\Users\*\AppData\Local\F-Secure\Log\*" />
+      <!-- McAfee EndpointSecurity https://docs.mcafee.com/bundle/endpoint-security-10.6.0-common-client-product-guide-windows/page/GUID-2E289950-D6E3-4F7F-93EE-998790E5E028.html -->
+      <ntfs_find path_match="\Documents and Settings\All Users\Application Data\McAfee\Endpoint Security\Logs\*.log" />
+      <ntfs_find path_match="\ProgramData\McAfee\Endpoint Security\Logs\*.log" />
+      <!-- McAfee DesktopProtection http://virusscan.helpmax.net/fr/partie%C2%A0iv-surveillance-analyse-et-parametrage-de-votre-protection/surveillance-de-lactivite-de-votre-environnement/outils-de-surveillance-de-lactivite/utilisation-des-journaux-dactivite/ -->
+      <ntfs_find path_match="\Documents and Settings\All Users\Application Data\McAfee\DesktopProtection\*.txt" />
+      <ntfs_find path_match="\ProgramData\McAfee\DesktopProtection\*.txt" />
+      <!-- Sophos https://community.sophos.com/kb/en-us/43391 -->
+      <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Sophos\Sophos *\Logs\*" />
+      <ntfs_find path_match="\ProgramData\Sophos\Sophos *\Logs\*" />
+      <!-- Symantec Endpoint Protection https://knowledge.broadcom.com/external/article/152795/where-can-i-find-endpoint-protection-cli.html -->
+      <ntfs_find path_match="\Documents and Settings\All Users\Application Data\Symantec\Symantec Endpoint Protection\*.log" /> <!-- wildcard * is greedy and recursive, this will match all .log files anywhere inside the subtree -->
+      <ntfs_find path_match="\ProgramData\Symantec\Symantec Endpoint Protection\*.log" />
+      <!-- Microsoft Protection Logs, related to Windows Defender somehow: https://www.crowdstrike.com/blog/how-to-use-microsoft-protection-logging-for-forensic-investigations/ -->
+      <ntfs_find path_match="\ProgramData\Microsoft\Windows Defender\Support\MPLog-*" />
+    </sample>
+
+    <sample name="hives_log" MaxTotalBytes="250MB">
+      <ntfs_find name_match="ntuser*.log*" />
+      <ntfs_find name_match="amcach*.log*" />
+      <ntfs_find name_match="usrcla*.log*" />
+      <ntfs_find name_match="settin*.log*" />
+      <ntfs_find name_match="sam*.log*" />
+      <ntfs_find name_match="securi*.log*" />
+      <ntfs_find name_match="softwa*.log*" />
+      <ntfs_find name_match="system*.log*" />
+      <ntfs_find name_match="defaul*.log*" />
+    </sample>
+
+    <sample name="powershell_traces" MaxTotalBytes="100MB">
+      <ntfs_find name="ConsoleHost_history.txt" />
+      <ntfs_find path_match="*\Appdata\Local\Microsoft\Windows\Powershell\CommandAnalysis\*" />
+      <ntfs_find path_match="*\Appdata\Local\Microsoft\Windows\Powershell\ModuleAnalysisCache" />
+    </sample>
+
+    <sample name="teamviewer" MaxTotalBytes="450MB">
+      <ntfs_find name_match="teamviewer*.log" />
+      <ntfs_find name="connections_incoming.txt" />
+    </sample>
+
+    <sample name="anydesk" MaxTotalBytes="450MB">
+      <ntfs_find path_match="\ProgramData\AnyDesk\*" />
+      <ntfs_find path_match="\Users\*\AppData\Roaming\AnyDesk\*" />
+    </sample>
+
+    <sample name="ultravnc" MaxTotalBytes="450MB">
+      <ntfs_find name="ultravnc.ini" />
+      <ntfs_find name="mslogon.log" />
+    </sample>
+
+    <sample name="screenconnect_config" MaxTotalBytes="50MB">
+	    <ntfs_find path_match="*\ScreenConnect*\user.config" />
+	    <ntfs_find path_match="*\ScreenConnect*\User.xml" />
+	    <ntfs_find path_match="*\ScreenConnect*\Session.db" />
+    </sample>
+    <sample name="screenconnect_data" MaxTotalBytes="200MB">
+	    <ntfs_find path_match="*\ConnectWiseControl\*" />
+	    <ntfs_find path_match="*\ScreenConnect*\*" />
+    </sample>
+
+    <sample name="exchange" MaxTotalBytes="1GB">
+      <ntfs_find path_match="*\Exchange Server\V*\Logging\Ews\*" name_match="*.log" />
+      <ntfs_find path_match="*\Exchange Server\V*\Logging\CmdletInfra\Powershell-Proxy\Cmdlet\*" name_match="*.log" />
+      <ntfs_find path_match="*\Exchange Server\V*\Logging\CmdletInfra\Powershell-Proxy\Http\*" name_match="*.log" />
+    </sample>
+
+    <sample name="file_transfer" MaxTotalBytes="50MB">
+      <ntfs_find path_match="*\appdata\roaming\filezilla\*" />
+      <ntfs_find name="rclone.conf" />
+      <ntfs_find name="WinSCP.ini" />
+    </sample>
+
+    <!--
+      https://learn.microsoft.com/en-us/troubleshoot/windows-server/networking/change-dfsr-debug-log-settings
+      Already compressed log files (.gz) for most of the files, careful not to collect to many of them as it will not compress well
+    -->
+    <sample name="dfsr" MaxTotalBytes="200MB">
+      <ntfs_find path_match="\windows\debug\dfsr*.log*" size_gt="0" />
+    </sample>
+
+    <sample name="dfsr_manifest" MaxTotalBytes="500MB">
+      <ntfs_find path_match="\System Volume Information\DFSR\Private\*\ConflictAndDeletedManifest.xml" size_gt="0" />
+      <ntfs_find path_match="\System Volume Information\DFSR\Private\*\PreExistingManifest.xml" size_gt="0" />
+    </sample>
+
+    <sample name="log" MaxPerSampleBytes="50MB" MaxTotalBytes="450MB">
+      <ntfs_find name_match="*.log" size_gt="0" />
+    </sample>
+
+</samples>
+
+</getthis>

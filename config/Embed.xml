@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<toolembed>
+    <file name="WOLFLAUNCHER_CONFIG" path=".\ORC_config.xml"/>
+
+    <!-- Memory -->
+    <file name="GetPagefile.xml" path=".\GetPagefile.xml" />
+
+    <!-- General -->
+    <file name="GetThis_Default.xml" path=".\GetThis_Default.xml"/>
+    <file name="GetThis_Additional.xml" path=".\GetThis_Additional.xml"/>
+    <file name="GetThis_Protected.xml" path=".\GetThis_Protected.xml"/>
+    <file name="GetThis_Optional.xml" path=".\GetThis_Optional.xml"/>
+    <file name="GetBrowsers_History.xml" path=".\GetBrowsers_History.xml"/>
+    <file name="GetBrowsers_Artefacts.xml" path=".\GetBrowsers_Artefacts.xml"/>
+    <file name="GetResidents.xml" path=".\GetResidents.xml"/>
+    <file name="GetExtAttrs.xml" path=".\GetExtAttrs.xml"/>
+    <file name="GetSDS.xml" path=".\GetSDS.xml"/>
+    <file name="GetCatRoot.xml" path=".\GetCatRoot.xml"/>
+    <file name="GetMemoryDmp.xml" path=".\GetMemoryDmp.xml"/>
+    <file name="GetSamples.xml" path=".\GetSamples.xml" />
+    <file name="GetYaraSamples.xml" path=".\GetYaraSamples.xml"/>
+    <file name="GetFuzzyHash.xml" path=".\GetFuzzyHash.xml"/>
+    <file name="NTFSInfo_Details.xml" path=".\NTFSInfo_Details.xml"/>
+    <file name="NTFSInfo_Quick.xml" path=".\NTFSInfo_Quick.xml"/>
+    <file name="NTFSInfo_nolimit.xml" path=".\NTFSInfo_nolimit.xml"/>
+    <file name="FatInfo_Details.xml" path=".\FatInfo_Details.xml"/>
+
+    <!-- Debug -->
+    <file name="GetMFT.xml" path=".\GetMFT.xml" />
+
+    <!-- FastFind -->
+    <file name="FastFind_config.xml" path=".\FastFind_config.xml" />
+
+    <!-- Yara -->
+    <file name="yara_rules" path=".\ruleset.yara" />
+
+
+    <pair name="AUTORUNS"  value="7z:#Tools|autorunsc.exe" />
+
+    <archive name="Tools" format="7z" compression="Ultra">
+
+		<file name="handle.exe" path="..\tools\handle.exe" url="https://download.sysinternals.com/files/Handle.zip"/>
+		<file name="autorunsc.exe" path="..\tools\autorunsc.exe" url="https://download.sysinternals.com/files/Autoruns.zip"/>
+		<file name="Tcpvcon.exe" path="..\tools\Tcpvcon.exe" url="https://download.sysinternals.com/files/TCPView.zip"/>
+		<file name="Listdlls.exe" path="..\tools\Listdlls.exe" url="https://download.sysinternals.com/files/ListDlls.zip"/>
+        <file name="dumpit" path="..\tools\DumpIt.exe" />
+        <file name="PersistenceSniper.psm1" path="..\tools\PersistenceSniper.psm1" />
+
+    </archive>
+</toolembed>

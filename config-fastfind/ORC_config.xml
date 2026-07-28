@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<wolf childdebug="no" command_timeout="600">
+    <log>
+        <console level="critical" backtrace="critical"></console>
+        <file level="info" backtrace="error">
+            <output disposition="truncate">ORC_{SystemType}_{FullComputerName}_{TimeStamp}.log</output>
+        </file>
+    </log>
+
+    <outline disposition="truncate">ORC_{SystemType}_{FullComputerName}_{TimeStamp}_Outline.json</outline>
+    <outcome disposition="truncate">ORC_{SystemType}_{FullComputerName}_{TimeStamp}_Outcome.json</outcome>
+
+    <archive name="ORC_{SystemType}_{FullComputerName}_FastFind.7z" keyword="ORC_FastFind" concurrency="1" repeat="Once" compression="fast" archive_timeout="120" optional="no">
+        <restrictions ElapsedTimeLimit="570" />
+
+        <command keyword="FastFind">
+            <execute name="Orc.exe" run="self:#FastFind" />
+            <argument>/config=7z:#FastFind|FastFind_config.xml</argument>
+            <argument>/yara=7z:#FastFind|yara_rules</argument>
+            <output name="FastFind_result.xml" source="File" argument="/out={FileName}" />
+            <output name="FastFind.log" source="StdOutErr" />
+            <output name="FastFind.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetYara" optional="yes" >
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=7z:#FastFind|GetYaraSamples_config.xml</argument>
+            <output  name="Yara.7z" source="File" argument="/out={FileName}" />
+            <output  name="Yara.log" source="StdOutErr" />
+            <output  name="Yara.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+    </archive>
+</wolf>

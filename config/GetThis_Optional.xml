@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<getthis reportall="" resurrect="resident">
+  <location shadows="oldest,mid,newest">*</location>
+  <samples MaxSampleCount="4294967294">
+
+    <sample name="special_accounts" MaxTotalBytes="1GB">
+        <ntfs_find path_match="\windows\system32\config\systemprofile\*" />
+        <ntfs_find path_match="\windows\syswow64\config\systemprofile\*" />
+        <ntfs_find path_match="\windows\ServiceProfiles\LocalService\*" />
+        <ntfs_find path_match="\windows\ServiceProfiles\NetworkService\*" />
+    </sample>
+
+    <sample name="minidump" MaxTotalBytes="2GB">
+      <ntfs_find path_match="\Windows\Minidump\*" />
+      <ntfs_find name_match="*.mdmp" />
+    </sample>
+
+    <sample name="kerneldump" MaxTotalBytes="4GB">
+      <ntfs_find path_match="\Windows\LiveKernelReports\*" name_match="*.dmp" />
+    </sample>
+
+  </samples>
+
+</getthis>

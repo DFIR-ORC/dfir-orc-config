@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<toolembed>
+    <file name="WOLFLAUNCHER_CONFIG" path=".\ORC_config.xml"/>
+
+	<archive name="FastFind" format="7z" compression="Ultra">
+		<file name="FastFind_config.xml" path=".\FastFind_config.xml" />
+		<file name="yara_rules" path=".\ruleset.yara" />
+		<file name="GetYaraSamples_config.xml" path=".\GetYaraSamples_config.xml"/>
+	</archive>
+</toolembed>

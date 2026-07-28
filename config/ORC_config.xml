@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<wolf childdebug="no" command_timeout="2880" archive_timeout="240">
+    <log>
+        <console level="critical" backtrace="critical"></console>
+        <file level="info" backtrace="error">
+            <output disposition="truncate">ORC_{SystemType}_{FullComputerName}_{TimeStamp}.log</output>
+        </file>
+    </log>
+
+    <outline disposition="truncate">ORC_{SystemType}_{FullComputerName}_{TimeStamp}_Outline.json</outline>
+    <outcome disposition="truncate">ORC_{SystemType}_{FullComputerName}_{TimeStamp}_Outcome.json</outcome>
+
+    <archive name="ORC_{SystemType}_{FullComputerName}_Memory.7z" keyword="ORC_Memory" concurrency="1" repeat="Once" compression="fast" archive_timeout="240" optional="yes">
+        <restrictions ElapsedTimeLimit="360" />
+
+        <command keyword="capsule">
+            <execute name="type" run="%windir%\System32\cmd.exe" />
+            <argument>/c "rem"</argument>
+            <output name="Capsule#{SystemType}#{FullComputerName}#{TimeStamp}#{RunId}.txt" source="StdOutErr" />
+        </command>
+
+        <!-- Assume most systems will have more than 2GB of RAM, thus preventing the memory dump when less than 4GB of disk space remains -->
+        <command keyword="GetRam_dmp" diskfree="4GB" optional="yes" >
+            <execute name="dumpit" run="7z:#Tools|dumpit" />
+            <argument>/q /n /u</argument>
+            <output name="Dump_dumpit_{SystemType}_{FullComputerName}.dmp" source="File" argument="/o {FileName}" />
+            <output name="Dump_dumpit_{SystemType}_{FullComputerName}.log" source="StdOutErr" />
+        </command>
+
+        <!-- Assume most systems will have more than 2GB of Pagefile, thus preventing the collection when less than 4GB of disk space remains -->
+        <command keyword="GetPagefile" diskfree="4GB" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%systemdrive% /config=res:#GetPagefile.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="Pagefile.7z" source="File" argument="/out={FileName}" />
+            <output name="Pagefile.log" source="StdOutErr" />
+            <output name="Pagefile.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+    </archive>
+
+    <archive name="ORC_{SystemType}_{FullComputerName}_FastFind.7z" keyword="ORC_FastFind" concurrency="1" repeat="Once" compression="fast" archive_timeout="120" optional="yes">
+        <restrictions ElapsedTimeLimit="540" />
+
+        <command keyword="capsule">
+            <execute name="type" run="%windir%\System32\cmd.exe" />
+            <argument>/c "rem"</argument>
+            <output name="Capsule#{SystemType}#{FullComputerName}#{TimeStamp}#{RunId}.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="FastFind">
+            <execute name="Orc.exe" run="self:#FastFind" />
+            <argument>/config=res:#FastFind_config.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="FastFind_result.xml" source="File" argument="/out={FileName}" />
+            <output name="FastFind.log" source="StdOutErr" />
+            <output name="FastFind.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+    </archive>
+
+    <archive name="ORC_{SystemType}_{FullComputerName}_General.7z" keyword="ORC_General" concurrency="2" repeat="Once" compression="normal" archive_timeout="240">
+        <restrictions ElapsedTimeLimit="2880" />
+
+        <command keyword="capsule">
+            <execute name="type" run="%windir%\System32\cmd.exe" />
+            <argument>/c "rem"</argument>
+            <output name="Capsule#{SystemType}#{FullComputerName}#{TimeStamp}#{RunId}.txt" source="StdOutErr" />
+        </command>
+
+        <!-- Commands order should try to priorize volatile artefacts collection first -->
+
+        <command keyword="VSS_list">
+            <execute name="Orc.exe" run="self:#NTFSUtil" />
+            <argument>/VSS /log:console,level=critical,backtrace=critical</argument>
+            <output name="VSS_list.csv" source="File" argument="/out={FileName}" />
+            <output name="VSS_list.log" source="StdOutErr" />
+            <output name="VSS_list.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="EnumLocs">
+            <execute name="Orc.exe" run="self:#NTFSUtil" />
+            <argument>/enumlocs /log:console,level=critical,backtrace=critical</argument>
+            <output name="Enumlocs.txt" source="StdOutErr" />
+            <output name="NTFSUtil.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="USNInfo" queue="flush">
+            <execute name="Orc.exe" run="self:#USNInfo" />
+            <argument>* /shadows=oldest,mid,newest /log:console,level=critical,backtrace=critical</argument>
+            <output name="USNInfo.7z" source="File" argument="/out={FileName}" />
+            <output name="USNInfo.log" source="StdOutErr" />
+            <output name="USNInfo.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <!-- This key is mutually exclusive with USNInfo since the output files are the same. This is intended since this key is only to be used on filers with huge volumes -->
+        <command keyword="USNInfo_system_noshadow" queue="flush" optional="yes">
+            <execute name="Orc.exe" run="self:#USNInfo" />
+            <argument>%systemdrive% /shadows={00000000-0000-0000-0000-000000000000} /log:console,level=critical,backtrace=critical</argument>
+            <output name="USNInfo.7z" source="File" argument="/out={FileName}" />
+            <output name="USNInfo.log" source="StdOutErr" />
+            <output name="USNInfo.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="NTFSInfo_Quick_Shadows" queue="flush" >
+            <execute name="Orc.exe" run="self:#NTFSInfo" />
+            <argument>* /exclude=* /shadows=oldest,mid,newest /config=res:#NTFSInfo_Quick.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="NTFSInfo_quick.7z"  source="File" argument="/out={FileName}" />
+            <output name="NTFSInfo_i30Info_quick.7z" source="File" argument="/i30info={FileName}"/>
+            <output name="NTFSInfo_SecDesc_quick.7z" source="File" argument="/SecDescr={FileName}"/>
+            <output name="NTFSInfo_quick.log" source="StdOutErr" />
+            <output name="NTFSInfo_quick.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="NTFSInfo_Details_Current" queue="flush" >
+            <execute name="Orc.exe" run="self:#NTFSInfo" />
+            <argument>* /shadows={00000000-0000-0000-0000-000000000000} /config=res:#NTFSInfo_Details.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="NTFSInfo_details.7z"  source="File" argument="/out={FileName}" />
+            <output name="NTFSInfo_i30Info_details.7z" source="File" argument="/i30info={FileName}"/>
+            <output name="NTFSInfo_SecDesc_details.7z" source="File" argument="/SecDescr={FileName}"/>
+            <output name="NTFSInfo_details.log" source="StdOutErr" />
+            <output name="NTFSInfo_details.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <!-- This key is mutually exclusive with NTFSInfo_Details_Current since the output files are the same. This is intended since this key is only to be used on filers with huge volumes -->
+        <command keyword="NTFSInfo_Details_system_noshadow" queue="flush" optional="yes">
+            <execute name="Orc.exe" run="self:#NTFSInfo" />
+            <argument>%systemdrive% /shadows={00000000-0000-0000-0000-000000000000} /config=res:#NTFSInfo_Details.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="NTFSInfo_details.7z"  source="File" argument="/out={FileName}" />
+            <output name="NTFSInfo_i30Info_details.7z" source="File" argument="/i30info={FileName}"/>
+            <output name="NTFSInfo_SecDesc_details.7z" source="File" argument="/SecDescr={FileName}"/>
+            <output name="NTFSInfo_details.log" source="StdOutErr" />
+            <output name="NTFSInfo_details.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="NTFSInfoNoLimit" queue="flush" optional="yes">
+            <execute name="Orc.exe" run="self:#NTFSInfo" />
+            <argument>* /config=res:#NTFSInfo_nolimit.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="NTFSInfo_nolimit.7z"  source="File" argument="/out={FileName}" />
+            <output name="NTFSInfo_i30Info_nolimit.7z" source="File" argument="/i30info={FileName}"/>
+            <output name="NTFSInfo_SecDesc_nolimit.7z" source="File" argument="/SecDescr={FileName}"/>
+            <output name="NTFSInfo_nolimit.log" source="StdOutErr" />
+            <output name="NTFSInfo_nolimit.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="FatInfo" >
+            <execute name="Orc.exe" run="self:#FatInfo" />
+            <argument>* /config=res:#FatInfo_Details.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="FatInfo_detail.7z"  source="File" argument="/out={FileName}" />
+            <output name="FatInfo_detail.log" source="StdOutErr" />
+            <output name="FatInfo_detail.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetThis_Default">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>* /shadows=oldest,mid,newest /config=res:#GetThis_Default.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetThis_Default.7z" source="File" argument="/out={FileName}" />
+            <output name="GetThis_Default.log" source="StdOutErr" />
+            <output name="GetThis_Default.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <!-- This key is mutually exclusive with GetThis_Default since the output files are the same. This is intended since this key is only to be used on filers with huge volumes -->
+        <command keyword="GetThis_Default_system_noshadow" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%systemdrive% /shadows={00000000-0000-0000-0000-000000000000} /config=res:#GetThis_Default.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetThis_Default.7z" source="File" argument="/out={FileName}" />
+            <output name="GetThis_Default.log" source="StdOutErr" />
+            <output name="GetThis_Default.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetThis_Additional">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>* /shadows=oldest,mid,newest /config=res:#GetThis_Additional.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetThis_Additional.7z" source="File" argument="/out={FileName}" />
+            <output name="GetThis_Additional.log" source="StdOutErr" />
+            <output name="GetThis_Additional.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <!-- This key is mutually exclusive with GetThis_Additional since the output files are the same. This is intended since this key is only to be used on filers with huge volumes -->
+        <command keyword="GetThis_Additional_system_noshadow" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%systemdrive% /shadows={00000000-0000-0000-0000-000000000000} /config=res:#GetThis_Additional.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetThis_Additional.7z" source="File" argument="/out={FileName}" />
+            <output name="GetThis_Additional.log" source="StdOutErr" />
+            <output name="GetThis_Additional.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetThis_Protected">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>* /shadows=oldest,mid,newest /config=res:#GetThis_Protected.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetThis_Protected.7z" source="File" argument="/out={FileName}" />
+            <output name="GetThis_Protected.log" source="StdOutErr" />
+            <output name="GetThis_Protected.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <!-- This key is mutually exclusive with GetThis_Protected since the output files are the same. This is intended since this key is only to be used on filers with huge volumes -->
+        <command keyword="GetThis_Protected_system_noshadow" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%systemdrive% /shadows={00000000-0000-0000-0000-000000000000} /config=res:#GetThis_Protected.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetThis_Protected.7z" source="File" argument="/out={FileName}" />
+            <output name="GetThis_Protected.log" source="StdOutErr" />
+            <output name="GetThis_Protected.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetThis_Optional" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>* /shadows=oldest,mid,newest /config=res:#GetThis_Optional.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetThis_Optional.7z" source="File" argument="/out={FileName}" />
+            <output name="GetThis_Optional.log" source="StdOutErr" />
+            <output name="GetThis_Optional.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetBrowsers_History">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>* /shadows=oldest,mid,newest /config=res:#GetBrowsers_History.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetBrowsers_History.7z" source="File" argument="/out={FileName}" />
+            <output name="GetBrowsers_History.log" source="StdOutErr" />
+            <output name="GetBrowsers_History.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <!-- This key is mutually exclusive with GetBrowsers_History since the output files are the same. This is intended since this key is only to be used on filers with huge volumes -->
+        <command keyword="GetBrowsers_History_system_noshadow" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%systemdrive% /shadows={00000000-0000-0000-0000-000000000000} /config=res:#GetBrowsers_History.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetBrowsers_History.7z" source="File" argument="/out={FileName}" />
+            <output name="GetBrowsers_History.log" source="StdOutErr" />
+            <output name="GetBrowsers_History.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetBrowsers_Artefacts" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>* /shadows=oldest,mid,newest /config=res:#GetBrowsers_Artefacts.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetBrowsers_Artefacts.7z" source="File" argument="/out={FileName}" />
+            <output name="GetBrowsers_Artefacts.log" source="StdOutErr" />
+            <output name="GetBrowsers_Artefacts.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetResidents">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%systemdrive% /shadows={00000000-0000-0000-0000-000000000000} /config=res:#GetResidents.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="Residents.7z" source="File" argument="/out={FileName}" />
+            <!-- GetResidents stdout is often larger than the actual archive => log only stderr -->
+            <output name="Residents.log" source="StdErr" />
+            <output name="Residents.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetExtAttrs" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>* /config=res:#GetExtAttrs.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="ExtAttrs.7z" source="File" argument="/out={FileName}" />
+            <output name="ExtAttrs.log" source="StdOutErr" />
+            <output name="ExtAttrs.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="SystemInfo">
+            <execute name="systeminfo.exe" run="%windir%\System32\systeminfo.exe" />
+            <argument>/FO csv</argument>
+            <output name="Systeminfo.csv" source="StdOutErr" />
+        </command>
+
+        <command keyword="Autoruns">
+            <execute name="autorunsc.exe" run="7z:#Tools|autorunsc.exe"/>
+            <argument>-accepteula -nobanner -c -h -s -t -a * *</argument>
+            <output name="autoruns.csv" source="StdOut"/>
+            <output name="autoruns.log" source="StdErr"/>
+        </command>
+
+        <command keyword="GetBootCode">
+            <execute name="Orc.exe" run="self:#GetSectors" />
+            <argument>/LegacyBootCode /UefiFull /SlackSpace /log:console,level=critical,backtrace=critical</argument>
+            <output name="BootCode.7z" source="File" argument="/Out={FileName}" />
+            <output name="BootCode.log" source="StdOutErr" />
+            <output name="BootCode.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="Handle">
+            <execute name="handle.exe" run="7z:#Tools|handle.exe" />
+            <argument>/accepteula</argument>
+            <argument>/a</argument>
+            <output name="handle.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetObjInfo">
+            <execute name="Orc.exe" run="self:#ObjInfo" />
+            <argument>/log:console,level=critical,backtrace=critical</argument>
+            <output name="GetObjInfo.csv" source="File" argument="/out={FileName}" />
+            <output name="GetObjInfo.log" source="StdOutErr" />
+            <output name="GetObjInfo.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="Route">
+            <execute name="route.exe" run="%windir%\System32\route.exe" />
+            <argument>PRINT</argument>
+            <output name="routes.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="Dns_cache">
+            <execute name="ipconfig.exe" run="%windir%\System32\ipconfig.exe"/>
+            <argument>/displaydns</argument>
+            <output name="dns_cache.txt"  source="StdOutErr" />
+        </command>
+
+        <command keyword="Tcpvcon">
+            <execute name="Tcpvcon.exe" run="7z:#Tools|Tcpvcon.exe" />
+            <argument>/accepteula -a -n -c</argument>
+            <output name="Tcpvcon.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="Netstat">
+            <execute name="netstat.exe" run="%windir%\System32\netstat.exe"/>
+            <argument>-a -n -o</argument>
+            <output name="netstat.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetSamples">
+            <execute name="Orc.exe" run="self:#GetSamples" />
+            <argument>/config=res:#GetSamples.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetSamples_getthis.xml"  source="File"  argument="/getthisconfig={FileName}" />
+            <output name="GetSamples_autoruns.xml"  source="File"  argument="/autoruns={FileName}" />
+            <output name="GetSamples_sampleinfo.csv"  source="File"  argument="/sampleinfo={FileName}" />
+            <output name="GetSamples_timeline.csv"  source="File"  argument="/timeline={FileName}" />
+            <output name="GetSamples.7z"  source="File"  argument="/out={FileName}" />
+            <output name="GetSamples.log" source="StdOutErr" />
+            <output name="GetSamples.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="Listdlls">
+            <execute name="Listdlls.exe" run="7z:#Tools|Listdlls.exe" />
+            <argument>/accepteula</argument>
+            <output name="Listdlls.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="BITS_jobs" winver="6.0+">
+            <execute name="bitsadmin.exe" run="%windir%\System32\bitsadmin.exe" />
+            <argument>/list /allusers /verbose</argument>
+            <output name="BITS_jobs.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="Arp_cache">
+            <execute name="arp.exe" run="%windir%\System32\arp.exe" />
+            <argument>-a</argument>
+            <output name="arp_cache.txt"  source="StdOutErr" />
+        </command>
+
+        <!--
+        #####################################################################
+        ########
+        ######## Optional data collection
+        ########
+        #####################################################################
+        -->
+        <command keyword="GetYara" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>* /shadows=oldest,mid,newest /config=res:#GetYaraSamples.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="Yara.7z" source="File" argument="/out={FileName}" />
+            <output name="Yara.log" source="StdOutErr" />
+            <output name="Yara.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetFuzzyHash" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>* /shadows=no /config=res:#GetFuzzyHash.xml /fuzzyhash=ssdeep /log:console,level=critical,backtrace=critical</argument>
+            <output name="FuzzyHash.7z" source="File" argument="/out={FileName}" />
+            <output name="FuzzyHash.log" source="StdOutErr" />
+            <output name="FuzzyHash.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetCatroot" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>* /shadows=no /config=res:#GetCatRoot.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="CatRoot.7z" source="File" argument="/out={FileName}" />
+            <output name="CatRoot.log" source="StdOutErr" />
+            <output name="GetCatroot.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetSDS" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>* /shadows=no /config=res:#GetSDS.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="Secure.7z" source="File" argument="/out={FileName}" />
+            <output name="Secure.log" source="StdOutErr" />
+            <output name="Secure.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetMemoryDmp" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>* /shadows=no /config=res:#GetMemoryDmp.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="Memory_dmp.7z" source="File" argument="/out={FileName}" />
+            <output name="Memory_dmp.log" source="StdOutErr" />
+            <output name="Memory_dmp.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <!--
+        #####################################################################
+        ########
+        ######## Powershell data collection
+        ########
+        #####################################################################
+        -->
+
+        <command keyword="PersistenceSniper" winver="6.0+" timeout="10">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>Import-Module</argument>
+            <input name="PersistenceSniper.psm1" source="7z:#Tools|PersistenceSniper.psm1" argument="{FileName}" />
+            <argument>; Find-AllPersistence -Verbose | Export-Csv -NoTypeInformation -Encoding UTF8</argument>
+            <output name="PersistenceSniper.csv" source="File" argument="-Path {FileName}" />
+            <output name="PersistenceSniper.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="DNS_records" systemtype="DomainController|Server" winver="6.0+" timeout="10">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>$csv = @(); If (Get-Command Get-DnsServerZone -CommandType Function -ErrorAction SilentlyContinue) { Get-DnsServerZone | ForEach-Object { $ZoneName = $_.ZoneName; $csv += (Get-DnsServerResourceRecord -ZoneName $ZoneName | Select @{n='ZoneName'; e={$ZoneName}},"DistinguishedName","Hostname","RecordClass","RecordType",@{n='RecordData'; e={$_.RecordData.CimInstanceProperties}},"Timestamp","TimeToLive","Type") } } elseif (Get-WMIObject -namespace "root" -class "__Namespace" | Where-Object { $_.Name -eq 'MicrosoftDNS' }) { $csv += (Get-WmiObject -Namespace 'Root\MicrosoftDNS' MicrosoftDNS_ResourceRecord | Where-Object {	$_.ContainerName -notlike '..RootHints' -and $_.ContainerName -notlike '..Cache' } | Select * -ExcludeProperty PSComputerName, __GENUS, __SUPERCLASS, __DYNASTY, __RELPATH, __PATH, __PROPERTY_COUNT, __DERIVATION, __SERVER, __NAMESPACE) } else { Write-Warning 'DNS role is not installed' }; $csv | Export-Csv -NoTypeInformation -Encoding UTF8</argument>
+            <output name="DNS_records.csv" source="File" argument="-Path {FileName}" />
+            <output name="DNS_records.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="EventConsumer" winver="6.0+" timeout="10">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>Get-WMIObject -Namespace root\Subscription -Class __EventConsumer | Select *, @{n='CreatorSID'; e={(New-Object System.Security.Principal.SecurityIdentifier($_.CreatorSID, 0)).Value}}, @{n='CreatorName'; e={(New-Object System.Security.Principal.SecurityIdentifier($_.CreatorSID, 0)).Translate([System.Security.Principal.NTAccount])}} -ExcludeProperty CreatorSID,PSComputerName, __GENUS, __SUPERCLASS, __DYNASTY, __RELPATH, __PATH, __PROPERTY_COUNT, __DERIVATION, __SERVER, __NAMESPACE | Export-Csv -NoTypeInformation -Encoding UTF8</argument>
+            <output name="EventConsumer.csv" source="File" argument="-Path {FileName}" />
+            <output name="EventConsumer.log" source="StdErr" />
+        </command>
+
+        <command keyword="dotNetAssemblyTrace" winver="6.0+" timeout="10">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>function Get-DotNetTrace { Param ([Parameter(Mandatory)][System.IO.FileInfo]$Output); logman start trace dotNetAssemblyTrace -p '{A669021C-C450-4609-A035-5AF59AF4DF18}' 0x48 0x4 -o $Output -ow -ets; if ($LASTEXITCODE) { Write-Host "dotNetAssemblyTrace data Collector set already created. Stopping it and trying again"; logman stop dotNetAssemblyTrace -ets; logman start trace dotNetAssemblyTrace -p '{A669021C-C450-4609-A035-5AF59AF4DF18}' 0x48 0x4 -o $Output -ow -ets; }; if ($LASTEXITCODE) { Write-Host "Failed to start the trace" -ForegroundColor Red; exit 1; }; Start-Sleep -Seconds 5; logman stop dotNetAssemblyTrace -ets; exit $LASTEXITCODE; }; Get-DotNetTrace</argument>
+            <output name="dotNetAssemblyTrace.etl" source="File" argument="-Output {FileName}" />
+            <output name="dotNetAssemblyTrace.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="ADComputers" systemtype="DomainController" winver="6.0+" timeout="10">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>Import-Module ActiveDirectory ; $TimeAgo = (Get-Date).AddMonths(-3) ; Get-ADComputer -Filter {enabled -eq $true -and lastLogonTimeStamp -gt $TimeAgo} -Properties DNSHostName | Select DNSHostName | ConvertTo-Csv</argument>
+            <output name="AD_computers.csv" source="StdOut" />
+            <output name="AD_computers.log" source="StdErr" />
+        </command>
+
+        <command keyword="Processes1" winver="6.0+" timeout="5">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>Get-WMIObject win32_process | Export-Csv -NoTypeInformation -Encoding UTF8</argument>
+            <output name="processes1.csv" source="File" argument="-Path {FileName}" />
+            <output name="processes1.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="Processes2" winver="6.0+" timeout="5">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>Get-Process | Export-Csv -NoTypeInformation -Encoding UTF8</argument>
+            <output name="processes2.csv" source="File" argument="-Path {FileName}" />
+            <output name="processes2.log" source="StdOutErr" />
+        </command>
+
+        <command keyword="Azure_Attested" winver="6.0+" timeout="5">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>$web = New-Object Net.WebClient;$web.Headers.Add('Metadata','true');$web.DownloadString('http://169.254.169.254/metadata/attested/document?api-version=2020-06-01')</argument>
+            <output name="Azure_Attested.json" source="StdOut"/>
+            <output name="Azure_Attested.log" source="StdErr"/>
+        </command>
+
+        <command keyword="Azure_Instance" winver="6.0+" timeout="5">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>$web = New-Object Net.WebClient;$web.Headers.Add('Metadata','true');$web.DownloadString('http://169.254.169.254/metadata/instance?api-version=2020-06-01')</argument>
+            <output name="Azure_Instance.json" source="StdOut"/>
+            <output name="Azure_Instance.log" source="StdErr"/>
+        </command>
+
+        <command keyword="Azure_ScheduledEvents" winver="6.0+" timeout="5">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>$web = New-Object Net.WebClient;$web.Headers.Add('Metadata','true');$web.DownloadString('http://169.254.169.254/metadata/scheduledevents?api-version=2019-01-01')</argument>
+            <output name="Azure_ScheduledEvents.json" source="StdOut"/>
+            <output name="Azure_ScheduledEvents.log" source="StdErr"/>
+        </command>
+
+        <command keyword="Azure_Identity" winver="6.0+" timeout="5">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>$web = New-Object Net.WebClient;$web.Headers.Add('Metadata','true');$web.DownloadString('http://169.254.169.254/metadata/identity/oauth2/token?api-version=2020-06-01&amp;resource=https://management.azure.com/')</argument>
+            <output name="Azure_Identity.json" source="StdOut"/>
+            <output name="Azure_Identity.log" source="StdErr"/>
+        </command>
+
+        <command keyword="AWS_Metadata" winver="6.0+" timeout="5">
+            <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
+            <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
+            <argument>$metadata_server='http://169.254.169.254/latest/';$web=New-Object Net.WebClient;$web.Headers.Add('X-aws-ec2-metadata-token-ttl-seconds','21600');$parameters=New-Object System.Collections.Specialized.NameValueCollection;$token=[System.Text.Encoding]::Default.GetString($web.UploadValues($metadata_server+'api/token','PUT',$parameters));$result_dict=New-Object 'System.Collections.Generic.Dictionary[string,string]';Function api_gen($url){$web=New-Object Net.WebClient;$web.Headers.Add('X-aws-ec2-metadata-token',$token);try{$output=$web.DownloadString($url);return($output);}catch{return}}Function explore_api($path_dict){foreach ($path in $path_dict.Keys){if ($path.substring($path.length -1,1) -ne '/'){$fullUrl=$metadata_server + $path;$result=api_gen $fullUrl;if ($returnValue){$result_dict[$path]=$result;}}else{$fullUrl=$metadata_server + $path;$returnValue=api_gen $fullUrl;if ($returnValue){$temp_dict=New-Object 'System.Collections.Generic.Dictionary[string,string]';$resultArray=$returnValue.split([Environment]::NewLine);foreach ($result in $resultArray){if ($result -ne ''){$temp_dict[$path+$result]='';}}explore_api $temp_dict;}}}}Function init($url){$returnValue=api_gen $url;if ($returnValue){$path_dict=New-Object 'System.Collections.Generic.Dictionary[string,string]';$resultArray=$returnValue.split([Environment]::NewLine);foreach ($result in $resultArray){$path_dict[$result+'/']='';}return $path_dict;}}$path_dict=init $metadata_server;explore_api $path_dict;$result_dict | ConvertTo-JSON;</argument>
+            <output name="AWS_Metadata.json" source="StdOut"/>
+            <output name="AWS_Metadata.log" source="StdErr"/>
+        </command>
+
+    </archive>
+
+
+    <!--             -->
+    <!-- ORC OFFLINE -->
+    <!--             -->
+
+    <archive name="ORC_{SystemType}_{FullComputerName}_Offline.7z" keyword="ORC_Offline" concurrency="2" repeat="Once" compression="fast" archive_timeout="300" optional="yes">
+
+        <command keyword="capsule">
+            <execute name="type" run="%windir%\System32\cmd.exe" />
+            <argument>/c "rem"</argument>
+            <output name="Capsule#{SystemType}#{FullComputerName}#{TimeStamp}#{RunId}.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="VSS_list_offline">
+            <execute name="Orc.exe" run="self:#NTFSUtil" />
+            <argument>%OfflineLocation% /VSS /log:console,level=critical,backtrace=critical</argument>
+            <output name="VSS_list.csv" source="File" argument="/out={FileName}" />
+            <output name="VSS_list.log" source="StdOutErr" />
+            <output name="VSS_list.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="FastFindOffline" optional="yes">
+            <execute name="Orc.exe" run="self:#FastFind" />
+            <argument>%OfflineLocation% /config=res:#FastFind_config.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="FastFind_result.xml" source="File" argument="/out={FileName}" />
+            <output name="FastFind.log" source="StdOutErr" />
+            <output name="FastFind.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="NTFSInfo_Details_offline" queue="flush">
+            <execute name="Orc.exe" run="self:#NTFSInfo" />
+            <argument>%OfflineLocation% /shadows=oldest,mid,newest /config=res:#NTFSInfo_Details.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="NTFSInfo_i30Info.7z" source="File" argument="/i30info={FileName}"/>
+            <output name="NTFSInfo_SecDesc.7z" source="File" argument="/SecDescr={FileName}"/>
+            <output name="NTFSInfo_details.7z" source="File" argument="/fileinfo={FileName}" />
+            <output name="NTFSInfo_details.log" source="StdOutErr" />
+            <output name="NTFSInfo_details.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="FatInfo_offline" queue="flush">
+            <execute name="Orc.exe" run="self:#FatInfo" />
+            <argument>%OfflineLocation% /config=res:#FatInfo_Details.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="FatInfo_detail.7z"  source="File" argument="/out={FileName}" />
+            <output name="FatInfo_detail.log" source="StdOutErr" />
+            <output name="FatInfo_detail.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="USNInfo_offline" queue="flush">
+            <execute name="Orc.exe" run="self:#USNInfo" />
+            <output name="USNInfo.7z" source="File" argument="/out={FileName}" />
+            <output name="USNInfo.log" source="StdOutErr" />
+            <output name="USNInfo.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+            <argument>%OfflineLocation% /shadows=oldest,mid,newest</argument>
+        </command>
+
+        <command keyword="GetThis_default_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%OfflineLocation% /nolimits /shadows=oldest,mid,newest /config=res:#GetThis_Default.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetThis_Default.7z" source="File" argument="/out={FileName}" />
+            <output name="GetThis_Default.log" source="StdOutErr" />
+            <output name="GetThis_Default.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetThis_additional_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%OfflineLocation% /nolimits /shadows=oldest,mid,newest /config=res:#GetThis_Additional.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetThis_Additional.7z" source="File" argument="/out={FileName}" />
+            <output name="GetThis_Additional.log" source="StdOutErr" />
+            <output name="GetThis_Additional.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetThis_optional_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%OfflineLocation% /nolimits /shadows=oldest,mid,newest /config=res:#GetThis_Optional.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetThis_Optional.7z" source="File" argument="/out={FileName}" />
+            <output name="GetThis_Optional.log" source="StdOutErr" />
+            <output name="GetThis_Optional.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetBrowsers_history_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%OfflineLocation% /nolimits /shadows=oldest,mid,newest /config=res:#GetBrowsers_History.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetBrowsers_History.7z" source="File" argument="/out={FileName}" />
+            <output name="GetBrowsers_History.log" source="StdOutErr" />
+            <output name="GetBrowsers_History.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetBrowsers_artefacts_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%OfflineLocation% /nolimits /shadows=oldest,mid,newest /config=res:#GetBrowsers_Artefacts.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="GetBrowsers_Artefacts.7z" source="File" argument="/out={FileName}" />
+            <output name="GetBrowsers_Artefacts.log" source="StdOutErr" />
+            <output name="GetBrowsers_Artefacts.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetFuzzyHash_offline">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%OfflineLocation% /shadows=no /config=res:#GetFuzzyHash.xml /fuzzyhash=ssdeep /log:console,level=critical,backtrace=critical</argument>
+            <output name="FuzzyHash.7z" source="File" argument="/out={FileName}" />
+            <output name="FuzzyHash.log" source="StdOutErr" />
+            <output name="FuzzyHash.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetBootCode_offline">
+            <execute name="Orc.exe" run="self:#GetSectors" />
+            <argument>/Disk=%OfflineLocation% /UefiFull /LegacyBootCode /SlackSpace /log:console,level=critical,backtrace=critical</argument>
+            <output name="BootCode.7z" source="File" argument="/Out={FileName}" />
+            <output name="BootCode.log" source="StdOutErr" />
+            <output name="BootCode.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetSDS_offline" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%OfflineLocation% /shadows=no /config=res:#GetSDS.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="Secure.7z" source="File" argument="/out={FileName}" />
+            <output name="Secure.log" source="StdOutErr" />
+            <output name="Secure.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetCatroot_offline" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%OfflineLocation% /shadows=no /config=res:#GetCatRoot.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="CatRoot.7z" source="File" argument="/out={FileName}" />
+            <output name="CatRoot.log" source="StdOutErr" />
+            <output name="CatRoot.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+        <command keyword="GetMemoryDmp_offline" optional="yes">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>%OfflineLocation% /shadows=no /config=res:#GetMemoryDmp.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="Memory_dmp.7z" source="File" argument="/out={FileName}" />
+            <output name="Memory_dmp.log" source="StdOutErr" />
+            <output name="Memory_dmp.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+    </archive>
+
+    <archive name="ORC_{SystemType}_{FullComputerName}_Debug.7z" keyword="ORC_Debug" concurrency="1" repeat="Once" compression="fast" archive_timeout="120" optional="yes">
+
+        <command keyword="capsule">
+            <execute name="type" run="%windir%\System32\cmd.exe" />
+            <argument>/c "rem"</argument>
+            <output name="Capsule#{SystemType}#{FullComputerName}#{TimeStamp}#{RunId}.txt" source="StdOutErr" />
+        </command>
+
+        <command keyword="GetMFT">
+            <execute name="Orc.exe" run="self:#GetThis" />
+            <argument>/config=res:#GetMFT.xml /log:console,level=critical,backtrace=critical</argument>
+            <output name="MFT.7z" source="File" argument="/out={FileName}" />
+            <output name="MFT.log" source="StdOutErr" />
+            <output name="MFT.dev.log" source="File" argument="/log:file,output={FileName},level=info,backtrace=error" />
+        </command>
+
+    </archive>
+
+</wolf>

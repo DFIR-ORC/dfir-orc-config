@@ -1,21 +1,21 @@
 # DFIR ORC Configuration
 
-**The `Configure.cmd` script is no longer compatible with versions of DFIR-Orc earlier than 10.3.**
-
 To configure DFIR ORC, you need:
 * configuration files in XML format, located in the "config" directory
-* items to embed ~~(especially DFIR-Orc binaries in 32 and 64 bits)~~, stored in the "tools" directory
-* **NEW** the single `DFIR-Orc.exe` executable, which should also be placed in the "tools" directory
+* items to embed, stored in the "tools" directory
+* the single `DFIR-Orc.exe` executable, which should be placed in the same directory as `Build.cmd`
 
-The configurations given as example here use several Sysinternals tools, DumpIt and WinPmem. You have to download and copy them in the "tools" directory.
+The configurations given as example here use several Sysinternals tools, DumpIt and PersistenceSniper. You have to download and copy them in the "tools" directory.
 
 The "tools" directory must therefore contain the following files:
 * autorunsc.exe
 * handle.exe
 * Tcpvcon.exe
 * Listdlls.exe
+* DumpIt.exe
+* PersistenceSniper.psm1
 
-Finally, to generate a configured DFIR-Orc executable, you have to run the ".\Configure.cmd" script (on a Windows system, **from an elevated command prompt**).
+Finally, to generate a configured DFIR-Orc executable, you have to run the ".\Build.cmd" script (on a Windows system, **from an elevated command prompt**).
 The generated binary is created in the "output" directory.
 
 
@@ -48,5 +48,4 @@ Ces configurations sont données à titre d'exemple et doivent être adaptées �
 Le contenu de ce dépôt est disponible sous la licence "LICENSE OUVERTE 2.0", disponible [ici](LICENSE-OUVERTE.md).
 
 Le nom DFIR ORC et le logo associé appartiennent à l'ANSSI, aucun usage n'est permis sans autorisation expresse.
-
 

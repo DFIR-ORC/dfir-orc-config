@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<getthis reportall="">
+  <location>*</location>
+  <samples MaxTotalBytes="256MB">
+
+    <sample name="extAttrs">
+      <ntfs_exclude path="\$Extent\$UsnJrnl" ads="$J" />
+      <ntfs_find ea_match="?*" />
+    </sample>
+
+  </samples>
+</getthis>

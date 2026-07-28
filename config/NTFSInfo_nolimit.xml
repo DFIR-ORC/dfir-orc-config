@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<ntfsinfo walker="MFT" resurrect="resident">
+  <location>*</location>
+  <columns>
+    <default>Default,FirstBytes,SecurityDirectorySize,SecurityDirectorySignatureSize</default>
+    <add HasPE="">MD5,SHA1,SHA256,PeMD5,PeSHA1,PeSHA256,Details,Authenticode</add>
+  </columns>
+</ntfsinfo>

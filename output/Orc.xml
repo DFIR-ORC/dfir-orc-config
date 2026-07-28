@@ -1,0 +1,68 @@
+<!-- Complete documentation of this file can be found here : https://dfir-orc.github.io/orc_local_config.html -->
+<dfir-orc priority="low" powerstate="SystemRequired,AwayMode">
+    <!-- Make ORC download itself via BITS (much more reliable but might trigger AV detection)
+    <download job="orc_download" method="bits"
+        server="http://_ip_or_fqdn_"
+        path="_virtual dir_"
+        command="_execution_folder_\Orc.exe" >
+        <file name="Orc.exe" localpath="_execution_folder_\Orc.exe" delete="yes"/>
+        <file name="Orc.xml" localpath="_execution_folder_\Orc.xml" delete="yes"/>
+    </download>
+    -->
+
+    <output>%temp%</output>
+    <!-- Default temporary directory is %temp%. Change the value to a whitelisted directory if some software restriction policies (SRP, Applocker, etc...) won't allow embedded tools to run from %temp%.
+    <temporary>C:\whitelisted_temp_dir</temporary>
+    -->
+
+    <!-- Upload results via BITS over HTTP (recommended but requires IIS with BITS_upload configured on the collection server)
+    <upload job="DFIR-ORC" method="BITS"
+            server="http://_ip_or_fqdn_"
+            path="_virtual dir_"
+            operation="move"
+            mode="async"
+    />
+    -->
+    <!-- Upload results via BITS over SMB (does not require IIS but usually requires the collection server to be domain-joined, or else explicit credentials must be provided here)
+    <upload job="DFIR-ORC" method="BITS"
+            server="file://_ip_or_fqdn_"
+            path="_share_name_"
+            operation="move"
+            mode="async"
+    />
+    -->
+
+    <!-- Encryption is **mandatory** for security reasons ! Please provide at least one public key to enable it. Insert the whole PEM-encoded public key here (including "BEGIN CERTIFICATE" header and "END CERTIFICATE" footer)
+    <recipient name="SOC" archive="*">
+    </recipient>
+    <recipient name="third_party" archive="*">
+    </recipient>
+    -->
+
+    <!-- Customize the archives to be run -->
+    <!-- Run ONLY these archives (comma separated)
+    <key>ORC_FastFind</key>
+    -->
+    <!-- Run the default archives plus these ones
+    <enable_key>ORC_Custom</enable_key>
+    -->
+    <!-- Run the default archives minus these ones
+    <disable_key>ORC_NotSoUseful</disable_key>
+    -->
+    <!-- Preset for filers with huge volumes (other than their %systemdrive%).
+    Enabled keys are mutually exclusive with their counterparts so do not enable any "_system_noshadow" key without disabling its counterpart !
+    <enable_key>USNInfo_system_noshadow</enable_key>
+    <enable_key>NTFSInfo_Details_system_noshadow</enable_key>
+    <enable_key>GetThis_Default_system_noshadow</enable_key>
+    <enable_key>GetThis_Additional_system_noshadow</enable_key>
+    <enable_key>GetThis_Protected_system_noshadow</enable_key>
+    <enable_key>GetBrowsers_History_system_noshadow</enable_key>
+    <disable_key>USNInfo</disable_key>
+    <disable_key>NTFSInfo_Details_Current</disable_key>
+    <disable_key>NTFSInfo_Quick_Shadows</disable_key>
+    <disable_key>GetThis_Default</disable_key>
+    <disable_key>GetThis_Additional</disable_key>
+    <disable_key>GetThis_Protected</disable_key>
+    <disable_key>GetBrowsers_History</disable_key>
+    -->
+</dfir-orc>

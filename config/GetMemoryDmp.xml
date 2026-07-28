@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<getthis reportall="" resurrect="resident" nolimits="">
+  <location shadows="oldest,mid,newest">%SystemDrive%</location>
+  <samples>
+    <sample name="memory_dump" MaxTotalBytes="16GB">
+      <ntfs_find name_match="*memory.dmp" />
+    </sample>
+  </samples>
+</getthis>

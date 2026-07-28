@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <fastfind version="foobar_YYYYMMDD">
-    <filesystem resurrect="resident">
-        <location shadows="oldest,mid,newest">%SystemDrive%</location>
-        <yara block="20M" overlap="2M" timeout="120" source="res:#yara_rules" scan_method="blocks" />
+    <filesystem resurrect="yes">
+        <location shadows="yes">%SystemDrive%</location>
+        <yara block="20M" overlap="2M" timeout="120" source="7z:#FastFind|yara_rules" scan_method="blocks" /> <!-- À partir de 10.0.17 -->
 
         <ntfs_find name="explorer.exe" />
         <ntfs_find name_match="expl*.exe" />

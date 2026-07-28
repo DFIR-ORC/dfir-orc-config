@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<ntfsinfo walker="MFT" resurrect="resident">
+  <!-- The location element is only informational in this file and should be overridden from the CLI (to add shadows parsing, more volumes, etc...) -->
+  <location>%systemdrive%</location>
+  <columns>
+    <default>Default,EASize</default>
+  </columns>
+</ntfsinfo>

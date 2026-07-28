@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<getthis reportall="" resurrect="resident" nolimits="">
+  <location>*</location>
+  <samples>
+    <sample name="CatRoot" MaxTotalBytes="2GB">
+      <ntfs_find name_match="*.cat" header_hex="30" />
+    </sample>
+  </samples>
+</getthis>

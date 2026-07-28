@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<getthis reportall="" resurrect="resident">
+  <output password="avproof" />
+  <location shadows="oldest,mid,newest">*</location>
+  <samples MaxSampleCount="4294967294">
+    <ntfs_exclude ads="WofCompressedData" />
+    <ntfs_exclude path_match="*\WorkingTemp\*" />
+
+
+    <sample name="EXE_TMP" MaxPerSampleBytes="10MB" MaxTotalBytes="512MB">
+      <ntfs_find path_match="\Documents And Settings\*\Local Settings\Temp\*" header="MZ" size_gt="0" />
+      <ntfs_find path_match="\Users\*\AppData\*" header="MZ" size_gt="0" />
+      <ntfs_find path_match="\Documents And Settings\*\Application Data\*" header="MZ" size_gt="0" />
+      <ntfs_find path_match="\RECYCLER\*" header="MZ" size_gt="0" />
+      <ntfs_find path_match="\$Recycle.bin\*" header="MZ" size_gt="0" />
+      <ntfs_find path_match="\Windows\Temp\*" header="MZ" size_gt="0" />
+      <ntfs_find path_match="\Temp\*" header="MZ" size_gt="0" />
+      <ntfs_find path_match="\System Volume Information\*" header="MZ" size_gt="0" />
+    </sample>
+
+
+    <sample name="vbs_vbe" MaxTotalBytes="50MB">
+        <ntfs_find name_match="*.vbs" />
+        <ntfs_find name_match="*.vbe" />
+    </sample>
+
+    <sample name="bat" MaxTotalBytes="10MB">
+        <ntfs_find name_match="*.bat" />
+    </sample>
+
+    <sample name="cmd" MaxTotalBytes="10MB">
+        <ntfs_find name_match="*.cmd" />
+    </sample>
+
+    <sample name="ps1" MaxTotalBytes="150MB">
+        <ntfs_find name_match="*.ps1" />
+    </sample>
+
+    <sample name="excel_macro" MaxTotalBytes="10MB">
+        <ntfs_find path_match="\Users\*\AppData\Roaming\Microsoft\Excel\XLStart" />
+        <ntfs_find path_match="\Documents and Settings\*\Application Data\Microsoft\Excel\XLStart" />
+        <ntfs_find path_match="\Program Files\Microsoft Office\*\XLSTART" />
+    </sample>
+
+
+    <sample name="py" MaxTotalBytes="100MB">
+        <ntfs_find name_match="*.py" />
+        <ntfs_find name_match="*.pyc" />
+    </sample>
+
+    <sample name="lua" MaxTotalBytes="50MB">
+        <ntfs_find name_match="*.lua" />
+    </sample>
+
+    <sample name="kixtart" MaxTotalBytes="10MB">
+        <ntfs_find name_match="*.kix" />
+    </sample>
+
+  </samples>
+</getthis>

@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<getthis reportall="" resurrect="resident">
+  <location shadows="oldest,mid,newest">*</location>
+  <samples MaxSampleCount="4294967294">
+    <ntfs_exclude path="\$UpCase" ads="$Info" />
+    <ntfs_exclude path="\$Extend\$UsnJrnl" ads="$J" />
+    <ntfs_exclude path="\$BadClus" ads="$Bad" />
+    <ntfs_exclude path="\$Extend\$RmMetadata\$Repair" ads="$Corrupt" />
+    <ntfs_exclude path="\$Extend\$RmMetadata\$Repair" ads="$Verify" />
+    <ntfs_exclude path="\$Extend\$RmMetadata\$TxfLog\$Tops" ads="$T" />
+    <ntfs_exclude path="\$Secure" ads="$SDS" />
+    <ntfs_exclude ads="WofCompressedData" />
+    <ntfs_exclude path_match="*\WorkingTemp\*" />
+
+    <sample name="Prefetch" MaxTotalBytes="150MB">
+      <ntfs_find path_match="\Windows\Prefetch\*.pf" />
+      <ntfs_find path_match="\Windows\Prefetch\layout.ini" />
+    </sample>
+
+    <sample name="recentFile" MaxTotalBytes="120MB">
+      <ntfs_find name="RecentFileCache.bcf" />
+      <ntfs_find path_match="\Windows\AppCompat\Programs\AEINV_*.xml" />
+      <ntfs_find path_match="\Users\*\AppData\Roaming\Microsoft\Windows\Recent\*Destinations-ms" />
+    </sample>
+    <sample name="lnk" MaxTotalBytes="100MB">
+      <!--
+        Some files with the .lnk extension are not LNK files, therefore we need to filter on the header.
+        It has not changed since the creation of the format so this should be fairly stable.
+        The header starts with its size stored on 4 bytes (0x4c) then the LNK class identifier GUID {00021401-0000-0000-c000-000000000046}
+      -->
+      <ntfs_find name_match="*.lnk" header_hex="4c0000000114020000000000c000000000000046" />
+    </sample>
+
+    <sample name="WMI_Filters" MaxTotalBytes="500MB" MaxPerSampleBytes="100MB">
+        <ntfs_find path_match="\Windows\system32\wbem\Repository\*.DATA" />
+        <ntfs_find path_match="\Windows\system32\wbem\Repository\*.MAP" />
+        <ntfs_find path_match="\Windows\system32\wbem\Repository\*.BTR" />
+    </sample>
+
+    <sample name="SRUM" MaxTotalBytes="600MB">
+        <ntfs_find path_match="\Windows\System32\sru\*" />
+    </sample>
+
+    <sample name="SystemHives" MaxTotalBytes="6GB">
+      <ntfs_find name="Amcache.hve" header="regf" />
+      <ntfs_find name="SECURITY" header="regf" />
+      <ntfs_find name="SOFTWARE" header="regf" />
+      <ntfs_find name="SYSTEM" header="regf" />
+      <ntfs_find name="COMPONENTS" header="regf" />
+      <ntfs_find name="DEFAULT" header="regf" />
+      <ntfs_find name="BCD-Template" header="regf" />
+      <ntfs_find name="syscache.hve" header="regf" />
+      <ntfs_find name="UserDiff" header="regf" />
+      <ntfs_find name="ELAM" header="regf" />
+      <ntfs_find name="SAM" header="regf" />
+    </sample>
+
+    <sample name="UserHives" MaxTotalBytes="2GB">
+      <ntfs_find name="ntuser.dat" header="regf" />
+      <ntfs_find name="UsrClass.dat" header="regf" />
+      <ntfs_find name="ntuser.man" header="regf" />
+    </sample>
+
+    <!-- Ensure Security.evtx is (almost) always collected -->
+    <sample name="evtx_security" MaxTotalBytes="10GB">
+      <ntfs_find name_match="security.evtx" header="ElfFile" />
+    </sample>
+
+    <sample name="evtx" MaxTotalBytes="5GB">
+      <ntfs_find name_match="*.evtx" header="ElfFile" />
+    </sample>
+
+    <sample name="evt" MaxTotalBytes="5GB">
+      <ntfs_find name_match="*.evt" header_hex="300000004c664c65" />
+    </sample>
+
+    <sample name="job" MaxTotalBytes="10MB">
+        <ntfs_find name_match="*.job" />
+    </sample>
+
+    <sample name="job_xml" MaxTotalBytes="12MB">
+        <ntfs_find path_match="\Windows\Tasks\*"  />
+        <ntfs_find path_match="\Windows\System32\Tasks\*" />
+    </sample>
+
+    <sample name="ps_jobs" MaxTotalBytes="10MB">
+        <ntfs_find path_match="\Users\*\AppData\Local\Microsoft\Windows\PowerShell\ScheduledJobs\*"/>
+    </sample>
+
+    <sample name="IIS_log" MaxTotalBytes="1500MB">
+      <ntfs_find name_match="u_ex*.log" />
+    </sample>
+
+    <sample name="dhcp" MaxTotalBytes="200MB">
+      <ntfs_find path_match="*\system32\dhcp\*.log" />
+    </sample>
+
+</samples>
+
+</getthis>
