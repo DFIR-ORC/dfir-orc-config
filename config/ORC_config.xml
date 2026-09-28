@@ -21,12 +21,12 @@
         </command>
 
         <!-- Assume most systems will have more than 2GB of RAM, thus preventing the memory dump when less than 4GB of disk space remains -->
-        <command keyword="GetRam_dmp" diskfree="4GB" optional="yes" >
+        <!-- <command keyword="GetRam_dmp" diskfree="4GB" optional="yes" >
             <execute name="dumpit" run="7z:#Tools|dumpit" />
             <argument>/q /n /u</argument>
             <output name="Dump_dumpit_{SystemType}_{FullComputerName}.dmp" source="File" argument="/o {FileName}" />
             <output name="Dump_dumpit_{SystemType}_{FullComputerName}.log" source="StdOutErr" />
-        </command>
+        </command> -->
 
         <!-- Assume most systems will have more than 2GB of Pagefile, thus preventing the collection when less than 4GB of disk space remains -->
         <command keyword="GetPagefile" diskfree="4GB" optional="yes">
