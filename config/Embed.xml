@@ -44,7 +44,7 @@
 		<file name="Tcpvcon.exe" path="..\tools\Tcpvcon.exe" url="https://download.sysinternals.com/files/TCPView.zip"/>
 		<file name="Listdlls.exe" path="..\tools\Listdlls.exe" url="https://download.sysinternals.com/files/ListDlls.zip"/>
         <!-- <file name="dumpit" path="..\tools\DumpIt.exe" /> -->
-        <file name="PersistenceSniper.psm1" path="..\tools\PersistenceSniper.psm1" />
+        <!-- <file name="PersistenceSniper.psm1" path="..\tools\PersistenceSniper.psm1" /> -->
 
     </archive>
 </toolembed>

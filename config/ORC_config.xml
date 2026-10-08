@@ -394,7 +394,7 @@
         #####################################################################
         -->
 
-        <command keyword="PersistenceSniper" winver="6.0+" timeout="10">
+        <!-- <command keyword="PersistenceSniper" winver="6.0+" timeout="10">
             <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
             <argument>-NonInteractive -WindowStyle Hidden -NoProfile</argument>
             <argument>Import-Module</argument>
@@ -402,7 +402,7 @@
             <argument>; Find-AllPersistence -Verbose | Export-Csv -NoTypeInformation -Encoding UTF8</argument>
             <output name="PersistenceSniper.csv" source="File" argument="-Path {FileName}" />
             <output name="PersistenceSniper.log" source="StdOutErr" />
-        </command>
+        </command> -->
 
         <command keyword="DNS_records" systemtype="DomainController|Server" winver="6.0+" timeout="10">
             <execute name="powershell" run="%SystemRoot%\System32\WindowsPowerShell\V1.0\powershell.exe"/>
