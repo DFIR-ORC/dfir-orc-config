@@ -71,7 +71,7 @@
         <ntfs_find name_match="*.plist" />
     </sample>
 
-    <sample name="ssh" MaxTotalBytes="20 MB">
+    <sample name="ssh" MaxTotalBytes="20MB">
         <ntfs_find name_match="sshd_config" />
         <ntfs_find name_match="known_hosts" />
         <ntfs_find name_match="administrators_authorized_keys" />
